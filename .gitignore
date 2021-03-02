@@ -102,3 +102,4 @@ venv.bak/
 .DS_Store
 .gitignore
 .vscode
+trafficrule/__pycache__/
