@@ -24,9 +24,7 @@
                     <th>Challan Amount</th>
                     <th>Resolved</th>
                     <th>Resolved Date</th>
-                    {% if request.user.groups.all.0.name == "Police" %}
-                        <th>Details</th>
-                    {% endif %}
+                    <th>Action</th>
                 </tr>
                 {% for complaint in complaints %}
                     <tr>
@@ -42,15 +40,23 @@
                         <td>{{ complaint.challan_amount }}</td>
                         <td>{{ complaint.resolved_message }}</td>
                         <td>{{ complaint.resolved_date }}</td>
-                        {% if request.user.groups.all.0.name == "Police" %}
-                            <td>
+                        <td>
+                            {% if request.user.groups.all.0.name == "Police" %}
                                 {% if complaint.status == "Pending" or complaint.status == "Due" %}
                                     <a href="/update-complaint/{{ complaint.id }}">Reply</a>
                                 {% else %}
                                     Resolved
                                 {% endif %}
-                            </td>
-                        {% endif %}
+                            {% else %}
+                                {% if complaint.status == "Pending" or complaint.status == "Due" %}
+                                    {% if complaint.challan_amount > 0 %}
+                                        <a href="/payment/{{ complaint.id }}">Pay</a>
+                                    {% endif %}
+                                {% else %}
+                                    No Action
+                                {% endif %}
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
