@@ -1,6 +1,6 @@
 # Traffic Rule Violation Ranking System
 
-Python - Django Projects
+Python - Django Projects 
 
 ## Modules
 
