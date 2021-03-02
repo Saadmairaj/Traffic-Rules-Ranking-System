@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <tr>
+        <td colspan="4">
+            <div id="slider" class="nivoSlider" style="margin-left: 0px;margin-top: 0px;">
+                <img src="{% static "images/header0.jpg" %}" width="960" height="400" />
+                <img src="{% static "images/header1.jpg" %}" width="960" height="400" />
+                <img src="{% static "images/header2.jpg" %}" width="960" height="400" />
+                <img src="{% static "images/header3.jpg" %}" width="960" height="400"  />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td  valign="top" style="padding: 10px;">
+            <table cellpadding="5" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="2" style="padding-top: 25px;font-size: 24px;padding-bottom: 15px;">
+                        <h1>Welcome to Traffic Rule Violation Ranking System</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 22px;padding: 20px;">
+                        Education, enforcement and engineering countermeasures are implemented to make road users comply with the traffic rules. Not all the traffic rule violations can be addressed nor countermeasures be implemented at all unsafe locations, at once, due to limited funds. Therefore, this study aims at ranking the traffic rule violations resulting in crashes based on individual ranks, such as 1) frequency (expressed as a function of the number of drivers violating a traffic rule and involved in crashes), 2) crash severity, 3) total crash cost, and, 4) cost severity index, to assist transportation system managers in prioritizing the allocation of funds and improving safety on roads. Crash data gathered for the state of North Carolina was processed and used in this study. Variations in the ranks of traffic rule violations were observed when individual ranking methods are used. As an example, exceeding authorized speed limit and driving under the influence of alcohol are ranked 1st and 2nd based on crash severity while failure to reduce speed and failure to yield the right-of-way are ranked 1st and 2nd based on frequency. To minimize the variations and capture the merits of individual ranking methods, four different composite ranks were computed by combining selected individual ranks. The computed averages and standard deviations of absolute rank differences between composite ranks is lower than those obtained from individual ranks. The weights to combine the selected individual ranks have a marginal effect on the computed averages and standard deviations of absolute rank differences. Combining frequency and crash severity or cost severity index, using equal weights, is recommended for prioritization and allocation of funds.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+    <tr>
+        <td colspan="4">
+            <div id="slider" class="nivoSlider" style="margin-left: 0px;margin-top: 0px;">
+                <img src="{% static "images/header0.jpg" %}" width="960" height="400" />
+                <img src="{% static "images/header1.jpg" %}" width="960" height="400" />
+                <img src="{% static "images/header2.jpg" %}" width="960" height="400"  />
+                <img src="{% static "images/header3.jpg" %}" width="960" height="400" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td  valign="top" style="padding: 10px;">
+            <table cellpadding="5" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="2" style="padding-top: 25px;font-size: 24px;padding-bottom: 15px;">
+                        <h1>Login</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 22px;padding: 20px;">
+                         <form method="post">
+                        {% csrf_token %}
+                         {% for field in form %}
+                             <div class="form-group">
+                                 {{ field.label_tag }}
+                                 {{ field|add_class:"form-control dark" }}
+                                 {% if field.help_text %}
+                                  <small style="color: grey">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                  <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                                  </div>
+                            {% endfor %}
+                        <button type="submit" class="button button1">Login</button>
+                    </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock %}

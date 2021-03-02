@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+    <tr>
+        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+            <h1>Complaint List / Challan History</h1>
+        </td>
+    </tr>
+    <tr>
+        <td  valign="top" height="500">
+            <table cellpadding="5" cellspacing="0" width="100%" id="customers">
+                <tr>
+                    {% if request.user.groups.all.0.name == "Police" %}
+                        <th>User</th>
+                    {% else %}
+                        <th>Police Station</th>
+                    {% endif %}
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Complaint</th>
+                    <th>Date</th>
+                    <th>Challan Amount</th>
+                    <th>Resolved</th>
+                    <th>Resolved Date</th>
+                    {% if request.user.groups.all.0.name == "Police" %}
+                        <th>Details</th>
+                    {% endif %}
+                </tr>
+                {% for complaint in complaints %}
+                    <tr>
+                        {% if request.user.groups.all.0.name == "Police" %}
+                            <td>{{ complaint.user }}</td>
+                        {% else %}
+                            <td>{{ complaint.police_station }}</td>
+                        {% endif %}
+                        <td>{{ complaint.complaint_type }}</td>
+                        <td>{{ complaint.status }}</td>
+                        <td>{{ complaint.complaint }}</td>
+                        <td>{{ complaint.date_created }}</td>
+                        <td>{{ complaint.challan_amount }}</td>
+                        <td>{{ complaint.resolved_message }}</td>
+                        <td>{{ complaint.resolved_date }}</td>
+                        {% if request.user.groups.all.0.name == "Police" %}
+                            <td>
+                                {% if complaint.status == "Pending" or complaint.status == "Due" %}
+                                    <a href="/update-complaint/{{ complaint.id }}">Reply</a>
+                                {% else %}
+                                    Resolved
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+{% endblock %}

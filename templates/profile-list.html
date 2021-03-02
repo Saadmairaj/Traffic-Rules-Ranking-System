@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+{% get_media_prefix as MEDIA_PREFIX %}
+
+    <tr>
+        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+            <h1>Users List</h1>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" height="500">
+            <table cellpadding="5" cellspacing="0" width="100%" id="customers">
+                <tr align='center'>
+                    <th>Status</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email Address</th>
+                    <th>Date Joined</th>
+                    <th>License Number</th>
+                    <th>Licence Valid Date</th>
+                    <th>Licence</th>
+                </tr>
+                {% for profile in profiles %}
+                    <tr align='center'>
+                        <td>{{ profile.user.groups.all.0.name }}</td>
+                        <td>{{ profile.user }}</td>
+                        <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
+                        <td>{{ profile.user.email }}</td>
+                        <td>{{ profile.user.date_joined }}</td>
+                        <td>{{ profile.drivers_licence_no }}</td>
+                        <td>{{ profile.licence_valid_date }}</td>
+                        <td><a href={{ MEDIA_PREFIX }}{{ profile.licence_img }}>View</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+{% endblock %}

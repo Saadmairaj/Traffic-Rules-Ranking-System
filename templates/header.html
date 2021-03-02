@@ -1,0 +1,46 @@
+{% load  static %}
+<tr>
+    <td colspan="4" class="header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <a href="index.jsp" style="text-decoration: none;">
+                        <h2 style="font-size: 30px; color: #000; padding-left: 10px;">Traffic Rule Violation Ranking</h2>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="4" style="height: 40px;">
+        <div id="navigation">
+            {% if user.is_active %}
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    {% if request.user.groups.all.0.name != "Police" %}
+                        <li><a href="/contact/">Contact</a></li>
+                    {% endif %}
+                    <li><a href="/myaccount/">My Account</a></li>
+                    <li><a href="/password/">Password</a></li>
+                    {% if request.user.groups.all.0.name == "Police" %}
+                        <li><a href="/complaint/">Complaint</a></li>
+                        <li><a href="/complaint-list/">Complaint List</a></li>
+                        <li><a href="/user-list/">User List</a></li>
+                    {% else %}
+                        <li><a href="/complaint-list/">Complaint List</a></li>
+                    {% endif %}
+                    <li><a href="/vehicles/">Vehicles</a></li>
+                    <li><a href="/logout/">Logout</a></li>
+                </ul>
+            {% else %}
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/login/">Login</a></li>
+                    <li><a href="/register/">Register</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </td>
+</tr>

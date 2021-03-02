@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <tr>
+        <td colspan="4">
+            <div id="slider" class="nivoSlider" style="margin-left: 0px;margin-top: 0px;">
+                <img src="{% static "images/header0.jpg" %}" width="960" height="300" />
+                <img src="{% static "images/header1.jpg" %}" width="960" height="300" />
+                <img src="{% static "images/header2.jpg" %}" width="960" height="300" />
+                <img src="{% static "images/header3.jpg" %}" width="960" height="300"  />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 250px;">
+            {% include "sidebar.html" %}
+        </td>
+        <td  valign="top" style="padding: 10px;border-left: solid 1px #ccc;">
+            <table width="100%">
+                <tr>
+                    <td colspan="2" style="padding-top: 25px;font-size: 24px;padding-bottom: 15px;">
+                        <h1>Contact Us</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <form method="post" id="contactForm" name="contactForm" class="form2">
+                            {% csrf_token %}
+                            {% for field in form.visible_fields  %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field.label_tag }} {{ field }}
+                                </div>
+                            {% endfor %}
+                            <button id="submitbtn" class="button button1" name="submit" type="submit">Submit</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock %}

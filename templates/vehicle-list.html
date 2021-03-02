@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+{% get_media_prefix as MEDIA_PREFIX %}
+
+    <tr>
+        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+            <h1>Vehicle List</h1>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" height="500">
+            <table cellpadding="5" cellspacing="0" width="100%" id="customers">
+                <tr align='center'>
+                    {% if request.user.groups.all.0.name == "Police" %}
+                        <th>Owner</th>                    
+                    {% endif %}
+                    <th>Vehicle No</th>
+                    <th>Company</th>
+                    <th>Model</th>
+                    <th>Fuel</th>
+                    <th>Manufacure Year</th>
+                    <th>Registered Date</th>
+                    {% comment %} <th>Registered Address</th>{% endcomment %}
+                    <th>Registration Certificate</th>                    
+                    <th>Insurance</th>                    
+                    <th>Pollution</th>                    
+                </tr>
+                {% for vehicle in vehicles %}
+                    <tr align='center'>
+                        {% if request.user.groups.all.0.name == "Police" %}
+                            <td><a href="{{ MEDIA_PREFIX }}uploads/licence_{{vehicle.owner}}.pdf">{{ vehicle.owner }}</td>
+                        {% endif %}
+                        <td>{{ vehicle.vehicle_no }}</td>
+                        <td>{{ vehicle.company }}</td>
+                        <td>{{ vehicle.model_no }}</td>
+                        <td>{{ vehicle.fuel_type }}</td>
+                        <td>{{ vehicle.manufacute_year }}</td>
+                        <td>{{ vehicle.date_created }}</td>
+                        {% comment %} <td>{{ vehicle.registered_address }}</td> {% endcomment %}
+                        <td><a href={{ MEDIA_PREFIX }}{{ vehicle.rc_img }}>View</td>                        
+                        <td>{{ vehicle.insurance_date }} <br>
+                            <a href={{ MEDIA_PREFIX }}{{ vehicle.insurance_img }}>View</td>
+                        <td>{{ vehicle.pollution_date }} <br>
+                            <a href="{{ MEDIA_PREFIX }}{{ vehicle.pollution_img }}">View</td>                        
+                    </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+{% endblock %}

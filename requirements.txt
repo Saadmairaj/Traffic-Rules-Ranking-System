@@ -1,0 +1,5 @@
+Django==2.2.19
+django-widget-tweaks==1.4.5
+mysqlclient
+pytz==2018.3
+sqlparse==0.3.0
