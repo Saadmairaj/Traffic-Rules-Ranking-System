@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from application import views
@@ -36,7 +36,9 @@ urlpatterns = [
     url(r'^complaint-list/$', views.ComplaintListView.as_view(), name='complaint-list'),
     url(r'^vehicles/$', views.VehiclesListView.as_view(), name='vehicles'),
     url(r'^update-complaint/(?P<pk>[0-9]+)/$', views.ComplaintUpdateView.as_view(), name='update-complaint'),
-    url(r'^user-list/$', views.ProfilesListView.as_view(), name='user-list')
+    url(r'^user-list/$', views.ProfilesListView.as_view(), name='user-list'),
+    url(r'^payment/(?P<pk>[0-9]+)$', views.PaymentView.as_view(), name='payment'),
+    # path('payments/', include('payments.urls'), name='payments'),  
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
