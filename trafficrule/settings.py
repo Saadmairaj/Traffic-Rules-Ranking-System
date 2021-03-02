@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'application',
+    'payments',    # Not working need to research more.
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
 ]
 
 
+# Not working need to research more.
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -57,6 +59,12 @@ EMAIL_HOST_USER = 'testpython06@gmail.com'
 EMAIL_HOST_PASSWORD = 'test@321'
 EMAIL_PORT = 587
 
+
+PAYMENT_HOST = 'localhost:8000'
+PAYMENT_USES_SSL = False
+PAYMENT_MODEL = 'application.Payment'
+PAYMENT_VARIANTS = {
+    'default': ('payments.dummy.DummyProvider', {})}
 
 
 STATIC_URL = '/static/'

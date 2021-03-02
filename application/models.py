@@ -9,6 +9,10 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.deconstruct import deconstructible
 
+from decimal import Decimal
+from payments import PurchasedItem
+from payments.models import BasePayment
+
 
 @deconstructible
 class ContentFileName:
@@ -124,12 +128,11 @@ class Complaint(models.Model):
     resolved_message = models.CharField(max_length=500, null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return "{}".format(self.complaint_type)
-    
 
-    def save(self, *args, **kwargs):
+    def send_email(self, *args, **kwargs):
         subject = f"{self.complaint_type} complaint from Traffic Police"
         message = f"Hi {self.user.first_name}, \n"\
                   f"A {self.complaint_type} complaint of {self.complaint} "\
@@ -139,19 +142,38 @@ class Complaint(models.Model):
                   f"Thanking You\n"\
                   f"Traffic Police"
         
+        if kwargs.get('challan', None):
+            subject = f"Challan payment successfull!"
+            message = f"Hi {self.user.first_name}, \n"\
+                      f"Payment of {self.complaint} challan of Rs {self.challan_amount}"\
+                      f" was successful. ({self.resolved_date})"\
+                      f"\n\n"\
+                      f"Thanking You\n"\
+                      f"Traffic Police"
+        
+        elif kwargs.pop('resolved', None):
+            subject = f"Challan has been resolved!"
+            message = f"Hi {self.user.first_name}, \n"\
+                      f"The {self.complaint} challan has been resolved by officer "\
+                      f"{self.resolved_by.first_name} {self.resolved_by.last_name} ({self.resolved_by})."\
+                      f"\nResolved message: {self.resolved_message}"\
+                      f"\n\n"\
+                      f"Thanking You\n"\
+                      f"Traffic Police"
+
         if self.complaint_type == 'FIR':
             message = message.replace('against', 'for').replace(' of 0 fee', '')
         
         elif self.complaint_type == 'Other':
             subject = "Complaint from Traffic Police"
-
+        
         send_mail(
             subject=subject, 
             message=message, 
             from_email='testpython06@gmail.com',
             recipient_list=[self.user.email, ],
             fail_silently=False)
-        return super().save(*args, **kwargs)
+        # return super().save(*args, **kwargs)
 
 
 class Company(models.Model):
@@ -205,6 +227,17 @@ class Vehicle(models.Model):
         return "{}".format(self.vehicle_no)
 
 
-class Upload(models.Model):
 
-    pass
+# Not working need more research in this.
+class Payment(BasePayment):
+    
+    def get_failure_url(self):
+        return 'http://example.com/failure/'
+
+    def get_success_url(self):
+        return 'http://example.com/success/'
+
+    def get_purchased_items(self):
+        # you'll probably want to retrieve these from an associated order
+        yield PurchasedItem(name='The Hound of the Baskervilles', sku='BSKV',
+                            quantity=9, price=Decimal(10), currency='USD')

@@ -5,13 +5,24 @@ from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
-from django.db.models import fields
-from django.db.models.fields import files
-from django.shortcuts import render, redirect
+from django.template.response import TemplateResponse
+from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.views.generic import CreateView, TemplateView, ListView, UpdateView
 
 from application.forms import ProfileForm, UserForm, SignUpForm
 from application.models import Contact, Complaint, Vehicle, Profile
+
+from payments import get_payment_model, RedirectNeeded
+
+
+def payment_details(request, payment_id):
+    payment = get_object_or_404(get_payment_model(), id=payment_id)
+    try:
+        form = payment.get_form(data=request.POST or None)
+    except RedirectNeeded as redirect_to:
+        return redirect(str(redirect_to))
+    return TemplateResponse(request, 'payment.html',
+                            {'form': form, 'payment': payment})
 
 
 def signup(request):
@@ -116,12 +127,13 @@ class ComplaintView(CreateView):
     def form_valid(self, form, *args, **kwargs):
         obj = form.save(commit=False)        
         obj.save()
+        obj.send_email()
         return super(ComplaintView, self).form_valid(form)
 
 
 class ComplaintListView(ListView):
     model = Complaint
-    fields = ['user','complaint_type', 'police_station', 'complaint', 
+    fields = ['user', 'complaint_type', 'police_station', 'complaint', 
               'challan_amount', 'status', 'resolved_date','resolved_message']
     template_name = 'complaint-list.html'
     context_object_name = 'complaints'
@@ -173,8 +185,9 @@ class ComplaintUpdateView(UpdateView):
         obj.resolved_by = self.request.user
         obj.resolved_date = datetime.datetime.now()
         obj.save()
-
+        obj.send_email(resolved=True)
         return super(ComplaintUpdateView, self).form_valid(form)
+
 
 
 class ProfilesListView(ListView):
@@ -189,3 +202,21 @@ class ProfilesListView(ListView):
     #     obj.resolved_date = datetime.datetime.now()
     #     obj.save()
     #     return super(ComplaintUpdateView, self).form_valid(form)
+
+
+class PaymentView(UpdateView):
+    model = Complaint
+    fields = ['challan_amount', 'status']
+    template_name = 'payment.html'
+    success_url = '/thanks/'
+
+    def form_valid(self, form, *args, **kwargs):
+        obj = form.save(commit=False)        
+        obj.save()
+        obj.resolved_by = self.request.user
+        obj.resolved_date = datetime.datetime.now()
+        obj.status = 'Paid'
+        obj.send_email(challan=True)
+        print('\n','hello', '\n')
+        return super(PaymentView, self).form_valid(form)
+    
