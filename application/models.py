@@ -183,7 +183,9 @@ def update_total_challan(sender, **kw):
     user = kw['instance'].user
     user.profile.total_challan = Complaint.objects.filter(
         user=user, complaint_type='Challan').count()
+    print(user.profile.total_challan)
     user.profile.save()
+
 
 @receiver(post_save, sender=Complaint)
 def update_rank_user(sender, **kw):

@@ -10,6 +10,7 @@
                 {% include "police-sidebar.html" %}
             {% else %}
                 {% include "general-sidebar.html" %}
+            {% endif %}
         </td>
         <td  valign="top" style="padding: 10px;border-left: solid 1px #ccc;">
             <table cellpadding="5" cellspacing="0" width="100%">
@@ -21,40 +22,40 @@
                 <tr>
                     <td style="line-height: 22px;padding: 20px;">
                         <form method="post">
-                        {% csrf_token %}
-                         {% for field in user_form %}
-                            <div class="form-group">
-                             {{ field.label_tag }}
-                             {{ field|add_class:"form-control dark" }}
-                             {% if field.help_text %}
-                              <small style="color: grey">{{ field.help_text }}</small>
-                            {% endif %}
-                            {% for error in field.errors %}
-                              <p style="color: red">{{ error }}</p>
-                            {% endfor %}
-                              </div>
-                        {% endfor %}
-                         {% for field in profile_form %}
-                            <div class="form-group">
-                                {{ field.label_tag }}
-                                {% if field.value == user.profile.licence_img %}
-                                    <a href={{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}>
-                                    <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250></a>
-                                {% elif field.value == user.profile.drivers_licence_no %}
-                                    {{ field.value }}
-                                {% else %}
+                            {% csrf_token %}
+                            {% for field in user_form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
                                     {{ field|add_class:"form-control dark" }}
-                                {% endif %}
-                                {% if field.help_text %}
-                                    <small style="color: grey">{{ field.help_text }}</small>
-                                {% endif %}
-                                {% for error in field.errors %}
-                                    <p style="color: red">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                        <button type="submit" class="button button1">Submit</button>
-                    </form>
+                                    {% if field.help_text %}
+                                        <small style="color: grey">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            {% for field in profile_form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {% if field.value == user.profile.licence_img %}
+                                        <a href={{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}>
+                                        <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250></a>
+                                    {% elif field.value == user.profile.drivers_licence_no %}
+                                        {{ field.value }}
+                                    {% else %}
+                                        {{ field|add_class:"form-control dark" }}
+                                    {% endif %}
+                                    {% if field.help_text %}
+                                        <small style="color: grey">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="button button1">Submit</button>
+                        </form>
                     </td>
                 </tr>
             </table>

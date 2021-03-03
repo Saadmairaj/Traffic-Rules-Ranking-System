@@ -155,10 +155,10 @@ class ComplaintListView(ListView):
         queryset = Complaint.objects.filter().order_by('-id')
 
         group = self.request.user.groups.values_list('name', flat=True).first()
-        if group == "Police":
-            queryset = queryset.filter(police_station=self.request.user.profile.police_station)
-        else:
-            queryset = queryset.filter(user=self.request.user)
+        # if group == "Police":
+        #     queryset = queryset.filter(police_station=self.request.user.profile.police_station)
+        # else:
+        queryset = queryset.filter(user=self.request.user)
         return queryset
 
 

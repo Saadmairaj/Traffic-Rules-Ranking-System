@@ -20,8 +20,10 @@
                         {% csrf_token %}
                         {% for field in user_form %}
                             <div class="form-group">
-                                {{ field.label_tag }}
-                                {{ field.value }}
+                                {% if field.value == user.email %}
+                                    {{ field.label_tag }}
+                                    {{ field.value }}
+                                {% endif %}
                             </div>
                         {% endfor %}
                         {% for field in profile_form %}
