@@ -30,7 +30,7 @@
                 {% for vehicle in vehicles %}
                     <tr align='center'>
                         {% if request.user.groups.all.0.name == "Police" %}
-                            <td><a href="{{ MEDIA_PREFIX }}uploads/licence_{{vehicle.owner}}.pdf">{{ vehicle.owner }}</td>
+                            <td><a href="/viewprofile/{{ vehicle.owner.id }}"> {{ vehicle.owner }} </td>
                         {% endif %}
                         <td>{{ vehicle.vehicle_no }}</td>
                         <td>{{ vehicle.company }}</td>

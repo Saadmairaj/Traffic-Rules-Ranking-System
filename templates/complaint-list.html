@@ -28,7 +28,7 @@
                 {% for complaint in complaints %}
                     <tr>
                         {% if request.user.groups.all.0.name == "Police" %}
-                            <td>{{ complaint.user }}</td>
+                            <td><a href="/viewprofile/{{ complaint.user.id }}">{{ complaint.user }}</a></td>
                         {% else %}
                             <td>{{ complaint.police_station }}</td>
                         {% endif %}
