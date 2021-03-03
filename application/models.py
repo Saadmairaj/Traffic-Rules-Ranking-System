@@ -67,7 +67,7 @@ class Profile(models.Model):
     pin = models.CharField(max_length=10, blank=True, null=True)
     country = models.CharField(max_length=200, blank=True, null=True)
     drivers_licence_no = models.CharField(
-        max_length=100, blank=True, null=True)
+        max_length=100, blank=True, null=True, unique=True)
     licence_valid_date = models.DateField(
         max_length=100, blank=True, null=True)
     licence_issue_state = models.CharField(
