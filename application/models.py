@@ -1,10 +1,10 @@
-import os
+import os, datetime
 from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
 from django.utils import timezone
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.deconstruct import deconstructible
@@ -74,6 +74,8 @@ class Profile(models.Model):
         max_length=100, blank=True, null=True)
     licence_img = models.FileField(upload_to=ContentFileName(
         'licence'), verbose_name=("Driver Licence (Images/PDF)"), null=True, blank=True)
+    total_challan = models.IntegerField(null=True, blank=True)
+    rank = models.IntegerField(default=500)
     
     class Meta:
         ordering = ('-user__date_joined', )
@@ -176,6 +178,27 @@ class Complaint(models.Model):
         # return super().save(*args, **kwargs)
 
 
+@receiver(post_save, sender=Complaint)
+def update_total_challan(sender, **kw):
+    user = kw['instance'].user
+    user.profile.total_challan = Complaint.objects.filter(
+        user=user, complaint_type='Challan').count()
+    user.profile.save()
+
+@receiver(post_save, sender=Complaint)
+def update_rank_user(sender, **kw):
+    user = kw['instance'].user
+    current_year = datetime.datetime.now().year
+    print(current_year)
+    challans = Complaint.objects.filter(
+        user=user, complaint_type='Challan', 
+        date_created__year=current_year).count()
+    negative_rank = challans * -10
+    user.profile.rank = 500 + negative_rank
+    print(challans)
+    user.profile.save()
+
+
 class Company(models.Model):
     compnay_name = models.CharField(max_length=100)
     company_website = models.CharField(max_length=200, null=True, blank=True)
@@ -225,7 +248,6 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return "{}".format(self.vehicle_no)
-
 
 
 # Not working need more research in this.

@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^register/$', views.signup, name='signup'),
     url(r'^login/$',auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     url(r'^myaccount/$', views.update_profile, name='profile'),
+    url(r'^viewprofile/(?P<pk>[0-9]+)/$', views.view_profile, name='view-profile'),
     url(r'^password/$', views.change_password, name='account/change_password'),
     url(r'^logout/$', auth_views.LogoutView.as_view(template_name="account/loggedout.html"), name='logout'),
     url(r'^thanks/$', TemplateView.as_view(template_name='thank-you.html'), name='thanks'),
@@ -38,7 +39,7 @@ urlpatterns = [
     url(r'^update-complaint/(?P<pk>[0-9]+)/$', views.ComplaintUpdateView.as_view(), name='update-complaint'),
     url(r'^user-list/$', views.ProfilesListView.as_view(), name='user-list'),
     url(r'^payment/(?P<pk>[0-9]+)$', views.PaymentView.as_view(), name='payment'),
-    # path('payments/', include('payments.urls'), name='payments'),  
+    # path('payments/', include('payments.urls'), name='payments'),   # Not working (app payments)
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

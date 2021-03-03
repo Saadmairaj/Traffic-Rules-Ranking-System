@@ -38,4 +38,5 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('mobile', 'gender', 'dob', 'address',
-                  'city', 'state', 'pin', 'country')
+                  'city', 'state', 'pin', 'country', 'drivers_licence_no',
+                  'licence_img')

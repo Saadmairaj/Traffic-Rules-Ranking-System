@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+{% get_media_prefix as MEDIA_PREFIX %}
+
+    <tr>
+        <td style="width: 250px;">
+            {% include "profilepic-sidebar.html" %}
+        </td>
+        <td  valign="top" style="padding: 10px;border-left: solid 1px #ccc;">
+            <table cellpadding="5" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+                        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 22px;padding: 20px;">
+                        {% csrf_token %}
+                        {% for field in user_form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                {{ field.value }}
+                            </div>
+                        {% endfor %}
+                        {% for field in profile_form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                {% if field.value == user.profile.licence_img %}
+                                    <a href={{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}>
+                                    <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250></a>
+                                {% else %}
+                                    {{ field.value }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock %}

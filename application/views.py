@@ -1,12 +1,12 @@
 import datetime
 from pyexpat.errors import messages
-
-from django.contrib.auth import update_session_auth_hash, authenticate, login
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
+from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, redirect
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.views.generic import CreateView, TemplateView, ListView, UpdateView
 
 from application.forms import ProfileForm, UserForm, SignUpForm
@@ -95,6 +95,15 @@ def update_profile(request):
         'profile_form': profile_form
     })
 
+@login_required
+def view_profile(request, pk):
+    user = User.objects.get(pk=pk)
+    return render(request, 'view-profile.html', {
+        'user': user,
+        'user_form': UserForm(instance=user),
+        'profile_form': ProfileForm(instance=user.profile)
+    })
+
 
 class HomePageView(TemplateView):
     """
@@ -150,7 +159,6 @@ class ComplaintListView(ListView):
             queryset = queryset.filter(police_station=self.request.user.profile.police_station)
         else:
             queryset = queryset.filter(user=self.request.user)
-
         return queryset
 
 
@@ -189,19 +197,11 @@ class ComplaintUpdateView(UpdateView):
         return super(ComplaintUpdateView, self).form_valid(form)
 
 
-
 class ProfilesListView(ListView):
     model = Profile
     fields = '__all__'
     template_name = 'profile-list.html'
     context_object_name = 'profiles'
-
-    # def form_valid(self, form, *args, **kwargs):
-    #     obj = form.save(commit=False)
-    #     obj.resolved_by = self.request.user
-    #     obj.resolved_date = datetime.datetime.now()
-    #     obj.save()
-    #     return super(ComplaintUpdateView, self).form_valid(form)
 
 
 class PaymentView(UpdateView):
@@ -217,6 +217,5 @@ class PaymentView(UpdateView):
         obj.resolved_date = datetime.datetime.now()
         obj.status = 'Paid'
         obj.send_email(challan=True)
-        print('\n','hello', '\n')
         return super(PaymentView, self).form_valid(form)
     

@@ -41,7 +41,7 @@
                         <td>{{ complaint.resolved_message }}</td>
                         <td>{{ complaint.resolved_date }}</td>
                         <td>
-                            {% if request.user.groups.all.0.name == "Police" %}
+                            {% if request.user.groups.all.0.name == "Police" and request.user != complaint.user %}
                                 {% if complaint.status == "Pending" or complaint.status == "Due" %}
                                     <a href="/update-complaint/{{ complaint.id }}">Reply</a>
                                 {% else %}

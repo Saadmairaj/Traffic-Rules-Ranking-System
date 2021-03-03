@@ -71,13 +71,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 
-
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
 ADMIN_MEDIA_PREFIX = '/admin/media/'
-
-
 
 
 ROOT_URLCONF = 'trafficrule.urls'

@@ -12,10 +12,13 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
-
+    readonly_fields=('total_challan', 'rank')
 
 class CustomUserAdmin(UserAdmin):
     inlines = (ProfileInline, )
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff',
+                'is_active')
+    list_per_page = 20
 
     def get_inline_instances(self, request, obj=None):
         if not obj:
