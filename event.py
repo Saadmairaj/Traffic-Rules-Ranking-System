@@ -3,21 +3,40 @@ import datetime
 import threading as th
 
 
-def timethread(fn=None, date_time=None, time_interval=1000, join=False):
+def run_once(f):
+    def wrapper(*args, **kwargs):
+        if not wrapper.has_run:
+            wrapper.has_run = True
+            return f(*args, **kwargs)
+    wrapper.has_run = False
+    return wrapper
+
+
+def qprint(*args, **kwargs):
+    if not kwargs.pop('quiet', True):
+        return print(*args, **kwargs)
+
+
+def timethread(fn=None, date_time=None, time_interval=1000, join=False, quiet=False):
     """To use as decorator to make a function call threaded.
     takes function as argument. To join=True pass @threaded(True)."""
     kw = {}
 
     def wrapper(*args, **kwargs):
+        qprint('Entered', quiet=quiet)
         if date_time and isinstance(date_time, (datetime.datetime)):
-            while date_time > datetime.datetime.now():
+            while date_time >= datetime.datetime.now():
+                qprint('Looping 1', quiet=quiet)
                 time.sleep(time_interval/1000)
         elif date_time and isinstance(date_time, (datetime.date)):
-            while date_time > datetime.datetime.now().date():
+            while date_time >= datetime.datetime.now().date():
+                qprint('Looping 2', quiet=quiet)
                 time.sleep(time_interval/1000)
         elif date_time and isinstance(date_time, (datetime.time)):
-            while date_time > datetime.datetime.now().time():
+            while date_time >= datetime.datetime.now().time():
+                qprint('Looping 3', quiet=quiet)
                 time.sleep(time_interval/1000)
+        qprint('Executing', quiet=quiet)
         kw['return'] = kw['function'](*args, **kwargs)
 
     def _threaded(fn):
