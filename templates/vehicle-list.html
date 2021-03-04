@@ -21,8 +21,7 @@
                     <th>Model</th>
                     <th>Fuel</th>
                     <th>Manufacure Year</th>
-                    <th>Registered Date</th>
-                    {% comment %} <th>Registered Address</th>{% endcomment %}
+                    <th>Registered On</th>
                     <th>Registration Certificate</th>                    
                     <th>Insurance</th>                    
                     <th>Pollution</th>                    
@@ -38,12 +37,27 @@
                         <td>{{ vehicle.fuel_type }}</td>
                         <td>{{ vehicle.manufacute_year }}</td>
                         <td>{{ vehicle.date_created }}</td>
-                        {% comment %} <td>{{ vehicle.registered_address }}</td> {% endcomment %}
                         <td><a href={{ MEDIA_PREFIX }}{{ vehicle.rc_img }}>View</td>                        
-                        <td>{{ vehicle.insurance_date }} <br>
-                            <a href={{ MEDIA_PREFIX }}{{ vehicle.insurance_img }}>View</td>
-                        <td>{{ vehicle.pollution_date }} <br>
-                            <a href="{{ MEDIA_PREFIX }}{{ vehicle.pollution_img }}">View</td>                        
+                        <td>
+                            {% if vehicle.date_now == vehicle.insurance_date %}
+                                <span style="color: orange">{{ vehicle.insurance_date }}</span><br>
+                            {% elif vehicle.date_now > vehicle.insurance_date %}
+                                <span style="color: red">{{ vehicle.insurance_date }}</span><br>
+                            {% else %}
+                                <span style="color: green">{{ vehicle.insurance_date }}</span><br>
+                            {% endif %}
+                            <a href={{ MEDIA_PREFIX }}{{ vehicle.insurance_img }}>View
+                        </td>
+                        <td>
+                            {% if vehicle.date_now == vehicle.pollution_date %}
+                                <span style="color: orange">{{ vehicle.pollution_date }}</span><br>
+                            {% elif vehicle.date_now > vehicle.pollution_date %}
+                                <span style="color: red">{{ vehicle.pollution_date }}</span><br>
+                            {% else %}
+                                <span style="color: green">{{ vehicle.pollution_date }}</span><br>
+                            {% endif %}
+                            <a href="{{ MEDIA_PREFIX }}{{ vehicle.pollution_img }}">View
+                        </td>                        
                     </tr>
                 {% endfor %}
             </table>
