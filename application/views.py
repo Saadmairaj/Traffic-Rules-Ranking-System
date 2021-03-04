@@ -57,7 +57,8 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
+            messages.success(
+                request, 'Your password was successfully updated!')
             return redirect('change_password')
         else:
             messages.error(request, 'Please correct the error below.')
@@ -95,6 +96,7 @@ def update_profile(request):
         'profile_form': profile_form
     })
 
+
 @login_required
 def view_profile(request, pk):
     user = User.objects.get(pk=pk)
@@ -128,13 +130,13 @@ class ContactView(CreateView):
 
 class ComplaintView(CreateView):
     model = Complaint
-    fields = ['complaint_type', 'police_station', 'user', 
+    fields = ['complaint_type', 'police_station', 'user',
               'complaint', 'challan_amount', 'status']
     template_name = 'complaint.html'
     success_url = '/thanks/'
 
     def form_valid(self, form, *args, **kwargs):
-        obj = form.save(commit=False)        
+        obj = form.save(commit=False)
         obj.save()
         obj.send_email()
         return super(ComplaintView, self).form_valid(form)
@@ -142,8 +144,8 @@ class ComplaintView(CreateView):
 
 class ComplaintListView(ListView):
     model = Complaint
-    fields = ['user', 'complaint_type', 'police_station', 'complaint', 
-              'challan_amount', 'status', 'resolved_date','resolved_message']
+    fields = ['user', 'complaint_type', 'police_station', 'complaint',
+              'challan_amount', 'status', 'resolved_date', 'resolved_message']
     template_name = 'complaint-list.html'
     context_object_name = 'complaints'
 
@@ -156,7 +158,8 @@ class ComplaintListView(ListView):
 
         group = self.request.user.groups.values_list('name', flat=True).first()
         if group == "Police":
-            queryset = queryset.filter(police_station=self.request.user.profile.police_station)
+            queryset = queryset.filter(
+                police_station=self.request.user.profile.police_station)
         else:
             queryset = queryset.filter(user=self.request.user)
         return queryset
@@ -181,8 +184,6 @@ class VehiclesListView(ListView):
         else:
             queryset = queryset.filter(owner=self.request.user)
         return queryset
-    
-    
 
 
 class ComplaintUpdateView(UpdateView):
@@ -208,8 +209,9 @@ class ProfilesListView(ListView):
 
     def get_queryset(self, **kwargs):
         return Profile.objects.filter(
-            ).order_by('-user__date_joined')
-    
+        ).order_by('-user__date_joined')
+
+
 class PaymentView(UpdateView):
     model = Complaint
     fields = ['challan_amount', 'status']
@@ -217,11 +219,10 @@ class PaymentView(UpdateView):
     success_url = '/thanks/'
 
     def form_valid(self, form, *args, **kwargs):
-        obj = form.save(commit=False)        
+        obj = form.save(commit=False)
         obj.save()
         obj.resolved_by = self.request.user
         obj.resolved_date = datetime.datetime.now()
         obj.status = 'Paid'
         obj.send_email(challan=True)
         return super(PaymentView, self).form_valid(form)
-    

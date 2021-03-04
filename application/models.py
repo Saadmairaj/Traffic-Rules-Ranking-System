@@ -1,4 +1,5 @@
-import os, datetime
+import os
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -18,7 +19,7 @@ from payments.models import BasePayment
 class ContentFileName:
     def __init__(self, prefix):
         self.prefix = prefix
-    
+
     def __call__(self, instance, org_filename):
         ext = org_filename.split('.')[-1]
         if isinstance(instance, Profile):
@@ -53,7 +54,7 @@ class Profile(models.Model):
         ('Female', 'Female'),
         ('Other', 'Other'),
     )
-    
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     police_station = models.ForeignKey(
         PoliceStation, on_delete=models.CASCADE, null=True, blank=True)
@@ -76,7 +77,7 @@ class Profile(models.Model):
         'licence'), verbose_name=("Driver Licence (Images/PDF)"), null=True, blank=True)
     total_challan = models.IntegerField(default=0)
     rank = models.IntegerField(default=500)
-    
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
@@ -102,6 +103,7 @@ class Contact(models.Model):
 
 class Complaint(models.Model):
     STATUS = (
+        ('Approved', 'Approved'),
         ('Pending', 'Pending'),
         ('Resolved', 'Resolved'),
         ('Reject', 'Reject'),
@@ -127,7 +129,7 @@ class Complaint(models.Model):
     resolved_message = models.CharField(max_length=500, null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return "{}".format(self.complaint_type)
 
@@ -140,7 +142,7 @@ class Complaint(models.Model):
                   f"\n\n"\
                   f"Thanking You\n"\
                   f"Traffic Police"
-        
+
         if kwargs.get('challan', None):
             subject = f"Challan payment successfull!"
             message = f"Hi {self.user.first_name}, \n"\
@@ -149,7 +151,7 @@ class Complaint(models.Model):
                       f"\n\n"\
                       f"Thanking You\n"\
                       f"Traffic Police"
-        
+
         elif kwargs.pop('resolved', None):
             subject = f"Challan has been resolved!"
             message = f"Hi {self.user.first_name}, \n"\
@@ -161,18 +163,23 @@ class Complaint(models.Model):
                       f"Traffic Police"
 
         if self.complaint_type == 'FIR':
-            message = message.replace('against', 'for').replace(' of 0 fee', '')
-        
+            message = message.replace(
+                'against', 'for').replace(' of 0 fee', '')
+
         elif self.complaint_type == 'Other':
             subject = "Complaint from Traffic Police"
-        
+
         send_mail(
-            subject=subject, 
-            message=message, 
+            subject=subject,
+            message=message,
             from_email='testpython06@gmail.com',
             recipient_list=[self.user.email, ],
             fail_silently=False)
-        # return super().save(*args, **kwargs)
+
+    @property
+    def get_fields(self):
+        for field in Complaint._meta.fields:
+            yield field.name, field.value_to_string(self)
 
 
 @receiver(post_save, sender=Complaint)
@@ -180,7 +187,6 @@ def update_total_challan(sender, **kw):
     user = kw['instance'].user
     user.profile.total_challan = Complaint.objects.filter(
         user=user, complaint_type='Challan').count()
-    print(user.profile.total_challan)
     user.profile.save()
 
 
@@ -189,7 +195,7 @@ def update_rank_user(sender, **kw):
     user = kw['instance'].user
     current_year = datetime.datetime.now().year
     challans = Complaint.objects.filter(
-        user=user, complaint_type='Challan', 
+        user=user, complaint_type='Challan',
         date_created__year=current_year).count()
     negative_rank = challans * -10
     user.profile.rank = 500 + negative_rank
@@ -214,7 +220,7 @@ class Vehicle(models.Model):
     )
 
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True)    
+        User, on_delete=models.CASCADE, null=True, blank=True)
     vehicle_no = models.CharField(max_length=20, unique=True)
     model_no = models.CharField(max_length=50)
     fuel_type = models.CharField(max_length=20, choices=FUEL)
@@ -228,24 +234,24 @@ class Vehicle(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
     rc_img = models.FileField(upload_to=ContentFileName(
-        'rc'), verbose_name=("RC (Images/PDF)"), null=True, 
+        'rc'), verbose_name=("RC (Images/PDF)"), null=True,
         blank=True)
     insurance_no = models.CharField(
         max_length=30, unique=True, null=True, blank=True)
     insurance_img = models.FileField(upload_to=ContentFileName(
-        'insurance'), verbose_name=("Insurance (Images/PDF)"), 
+        'insurance'), verbose_name=("Insurance (Images/PDF)"),
         null=True, blank=True)
     insurance_date = models.DateField(verbose_name=(
         "Insurance Validity"), null=True, blank=True)
     pollution_img = models.FileField(upload_to=ContentFileName(
-        'pollution'), verbose_name=("Pollution (Images/PDF)"), 
+        'pollution'), verbose_name=("Pollution (Images/PDF)"),
         null=True, blank=True)
     pollution_date = models.DateField(verbose_name=(
         "Pollution Validity"), null=True, blank=True)
 
     def __str__(self):
         return "{}".format(self.vehicle_no)
-    
+
     @property
     def date_now(self):
         """Return current datetime. 
@@ -255,7 +261,7 @@ class Vehicle(models.Model):
 
 # Not working need more research in this.
 class Payment(BasePayment):
-    
+
     def get_failure_url(self):
         return 'http://example.com/failure/'
 
