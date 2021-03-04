@@ -174,12 +174,15 @@ class VehiclesListView(ListView):
 
     def get_queryset(self, **kwargs):
         queryset = Vehicle.objects.filter().order_by('-id')
-        group = self.request.user.groups.values_list('name', flat=True).first()
+        group = self.request.user.groups.values_list(
+            'name', flat=True).first()
         if group == "Police":
             print("no any action")
         else:
             queryset = queryset.filter(owner=self.request.user)
         return queryset
+    
+    
 
 
 class ComplaintUpdateView(UpdateView):
@@ -203,7 +206,10 @@ class ProfilesListView(ListView):
     template_name = 'profile-list.html'
     context_object_name = 'profiles'
 
-
+    def get_queryset(self, **kwargs):
+        return Profile.objects.filter(
+            ).order_by('-user__date_joined')
+    
 class PaymentView(UpdateView):
     model = Complaint
     fields = ['challan_amount', 'status']
