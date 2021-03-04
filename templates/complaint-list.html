@@ -25,38 +25,43 @@
                     <th>Resolved Date</th>
                     <th>Action</th>
                 </tr>
+                
                 {% for complaint in complaints %}
-                    <tr>
-                        {% if request.user.groups.all.0.name == "Police" %}
-                            <td><a href="/viewprofile/{{ complaint.user.id }}">{{ complaint.user }}</a></td>
-                        {% else %}
-                            <td>{{ complaint.police_station }}</td>
-                        {% endif %}
-                        <td>{{ complaint.complaint_type }}</td>
-                        <td>{{ complaint.status }}</td>
-                        <td>{{ complaint.complaint }}</td>
-                        <td>{{ complaint.date_created }}</td>
-                        <td>{{ complaint.challan_amount }}</td>
-                        <td>{{ complaint.resolved_message }}</td>
-                        <td>{{ complaint.resolved_date }}</td>
-                        <td>
-                            {% if request.user.groups.all.0.name == "Police" and request.user != complaint.user %}
-                                {% if complaint.status == "Pending" or complaint.status == "Due" %}
-                                    <a href="/update-complaint/{{ complaint.id }}">Reply</a>
-                                {% else %}
-                                    Resolved
-                                {% endif %}
+                    {% if request.user.groups.all.0.name == "Police" and complaint.complaint_type not in 'Bonus, Penalty' or request.user.groups.all.0.name != "Police" %}
+                        <tr>
+                            {% if request.user.groups.all.0.name == "Police" %}
+                                <td><a href="/viewprofile/{{ complaint.user.id }}">{{ complaint.user }}</a></td>
                             {% else %}
-                                {% if complaint.status == "Pending" or complaint.status == "Due" %}
-                                    {% if complaint.challan_amount > 0 %}
-                                        <a href="/payment/{{ complaint.id }}">Pay</a>
+                                <td>{{ complaint.police_station }}</td>
+                            {% endif %}
+                            <td>{{ complaint.complaint_type }}</td>
+                            <td>{{ complaint.status }}</td>
+                            <td>{{ complaint.complaint }}</td>
+                            <td>{{ complaint.date_created }}</td>
+                            <td>{{ complaint.challan_amount }}</td>
+                            <td>{{ complaint.resolved_message }}</td>
+                            <td>{{ complaint.resolved_date }}</td>
+                            <td>
+                                {% if request.user.groups.all.0.name == "Police" and request.user != complaint.user and complaint.complaint_type != 'Bonus' %}
+                                    {% if complaint.status == "Pending" or complaint.status == "Due" %}
+                                        <a href="/update-complaint/{{ complaint.id }}">Reply</a>
+                                    {% else %}
+                                        Resolved
+                                    {% endif %}
+                                {% elif complaint.complaint_type != 'Bonus' %}
+                                    {% if complaint.status == "Pending" or complaint.status == "Due" %}
+                                        {% if complaint.challan_amount > 0 %}
+                                            <a href="/payment/{{ complaint.id }}">Pay</a>
+                                        {% endif %}
+                                    {% else %}
+                                        No Action
                                     {% endif %}
                                 {% else %}
-                                    No Action
+                                    <a href="">Claim</a>
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </table>
         </td>
