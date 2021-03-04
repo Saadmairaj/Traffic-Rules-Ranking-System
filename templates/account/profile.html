@@ -16,13 +16,23 @@
             <table cellpadding="5" cellspacing="0" width="100%">
                 <tr>
                     <td colspan="2" style="padding-top: 25px;font-size: 24px;">
-                        <h1>Welcome, <span style="color:darkgreen;">{{ user.first_name }}</span></h1>
+                        <h1>
+                            Welcome, 
+                            {% if user.first_name %}
+                                <span style="color:darkgreen;">{{ user.first_name }}</span>
+                            {% else %}
+                                <span style="color:darkgreen;">{{ user }}</span>
+                            {% endif %}
+                        </h1>
                     </td>
                 </tr>
                 <tr>
                     <td style="line-height: 22px;padding: 20px;">
                         <form method="post">
                             {% csrf_token %}
+                            <div  class="form-group">
+                                <b>Username:</b> {{ user }}
+                            </div>
                             {% for field in user_form %}
                                 <div class="form-group">
                                     {{ field.label_tag }}
