@@ -74,11 +74,8 @@ class Profile(models.Model):
         max_length=100, blank=True, null=True)
     licence_img = models.FileField(upload_to=ContentFileName(
         'licence'), verbose_name=("Driver Licence (Images/PDF)"), null=True, blank=True)
-    total_challan = models.IntegerField(null=True, blank=True)
+    total_challan = models.IntegerField(default=0)
     rank = models.IntegerField(default=500)
-    
-    class Meta:
-        ordering = ('-user__date_joined', )
     
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -191,13 +188,11 @@ def update_total_challan(sender, **kw):
 def update_rank_user(sender, **kw):
     user = kw['instance'].user
     current_year = datetime.datetime.now().year
-    print(current_year)
     challans = Complaint.objects.filter(
         user=user, complaint_type='Challan', 
         date_created__year=current_year).count()
     negative_rank = challans * -10
     user.profile.rank = 500 + negative_rank
-    print(challans)
     user.profile.save()
 
 
@@ -250,6 +245,12 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return "{}".format(self.vehicle_no)
+    
+    @property
+    def date_now(self):
+        """Return current datetime. 
+        Used to check due dates in templates."""
+        return datetime.datetime.now().date()
 
 
 # Not working need more research in this.
