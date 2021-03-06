@@ -17,7 +17,8 @@ def qprint(*args, **kwargs):
         return print(*args, **kwargs)
 
 
-def timethread(fn=None, date_time=None, time_interval=1000, join=False, quiet=False):
+def timethread(fn=None, date_time=None, time_interval=1000, 
+               join=False, quiet=False):
     """To use as decorator to make a function call threaded.
     takes function as argument. To join=True pass @threaded(True)."""
     kw = {}
