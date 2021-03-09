@@ -6,7 +6,11 @@
 
     <tr>
         <td style="width: 250px;">
-            {% include "profilepic-sidebar.html" %}
+            {% if user.groups.all.0.name == "Police" %}
+                {% include "police-profilepic-sidebar.html" %}
+            {% else %}
+                {% include "general-profilepic-sidebar.html" %}
+            {% endif %}
         </td>
         <td  valign="top" style="padding: 10px;border-left: solid 1px #ccc;">
             <table cellpadding="5" cellspacing="0" width="100%">
