@@ -19,9 +19,9 @@
                         <h1>
                             Welcome, 
                             {% if user.first_name %}
-                                <span style="color:darkgreen;">{{ user.first_name }}</span>
+                                <span style="color:lightgrey;">{{ user.first_name }}</span>
                             {% else %}
-                                <span style="color:darkgreen;">{{ user }}</span>
+                                <span style="color:lightgrey;">{{ user }}</span>
                             {% endif %}
                         </h1>
                     </td>
@@ -30,7 +30,7 @@
                     <td style="line-height: 22px;padding: 20px;">
                         <form method="post">
                             {% csrf_token %}
-                            <div  class="form-group">
+                            <div class="form-group">
                                 <b>Username:</b> {{ user }}
                             </div>
                             {% for field in user_form %}
