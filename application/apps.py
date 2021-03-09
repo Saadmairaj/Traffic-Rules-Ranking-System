@@ -15,7 +15,7 @@ def email_details(name, doc, vehicle_no, over_due=False):
     subject = f"Reminder: The {doc} certificate of vehicle "\
               f"({vehicle_no}) is going to expire."
     if over_due:
-        message = message.replace(
+        message = messclearage.replace(
             'is going to expire soon.',
             'has expired. Driving without proper documents is traffic violation.')
         subject = subject.replace('is going to expire', 'has expired')
