@@ -103,3 +103,4 @@ venv.bak/
 .gitignore
 .vscode
 trafficrule/__pycache__/
+static/.DS_Store
