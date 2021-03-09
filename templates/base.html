@@ -14,23 +14,27 @@
             });
         </script>
     </head>
-    <body>
-        <table width="960" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff">
-        
-            {% include 'header.html' %}
+    <body> 
+        <div class="background-image"></div>
+            <div class="floating-box">
+                <table class="body-table" width="960" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <!-- Header -->
+                    {% include 'header.html' %}
 
-            {% block content %}
-            <!-- middle content -->
-            {% endblock %}
+                    {% block content %}
+                    <!-- middle content -->
+                    {% endblock %}
 
-            <tr><td colspan="4" style="border-bottom:1px solid #CCCCCC;"></td></tr>
-            <tr>
-                <td colspan="4">
-                <!-- Footer -->
-                {% include 'footer.html' %}
-                </td>
-            </tr>
-        </table>
+                    <tr><td colspan="4" style="border-bottom:1px solid #CCCCCC;"></td></tr>
+                    <tr>
+                        <td colspan="4">
+                        <!-- Footer -->
+                        {% include 'footer.html' %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </body>
 </html>
 
