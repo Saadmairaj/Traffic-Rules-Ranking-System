@@ -45,7 +45,8 @@ def timethread(fn=None, date_time=None, time_interval=1000,
 
         def thread_func(*args, **kwargs):
             thread = th.Thread(
-                target=wrapper, args=args, kwargs=kwargs, daemon=True)
+                target=wrapper, args=args, kwargs=kwargs, 
+                daemon=True)
             thread.start()
             if join:
                 thread.join()
