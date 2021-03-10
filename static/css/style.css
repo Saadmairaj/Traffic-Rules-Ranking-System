@@ -329,7 +329,8 @@ textarea {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
 }
-div.search {
+
+/* div.search {
   width: 222px;
   height: 46px;
   text-align: left;
@@ -346,7 +347,7 @@ div.search .inputbox {
   padding: 5px 2px 2px 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-}
+} */
 
 .lmenu ul {
   margin: 0;
