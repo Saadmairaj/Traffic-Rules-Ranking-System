@@ -1,6 +1,7 @@
 import datetime
 from pyexpat.errors import messages
 from django.db import transaction
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
 from django.contrib.auth.forms import PasswordChangeForm
@@ -208,8 +209,32 @@ class ProfilesListView(ListView):
     context_object_name = 'profiles'
 
     def get_queryset(self, **kwargs):
-        return Profile.objects.filter(
-        ).order_by('-user__date_joined')
+        query_list = self.model.objects.filter(
+            ).order_by('-user__date_joined')
+
+        query = self.request.GET.get('q')
+        if query:
+            query_fields = [Q(**{f: str(query)}) for f in (
+                # 'user__username',
+                'user__first_name__iexact', 
+                'user__last_name__iexact',
+                'user__email__iexact', 
+                'user__email__icontains', 
+                'drivers_licence_no__iexact',
+                # 'rank',
+                )   ]
+            query_fields += [Q(user__groups=1 if query in 'police' else 2)]
+
+            q = query_fields[0]
+            for f in query_fields:
+                q |= f
+            try:
+                query_list = query_list.filter(
+                    q
+                ).distinct()
+            except (ValueError, ) as err: 
+                print(err)
+        return query_list
 
 
 class PaymentView(UpdateView):
