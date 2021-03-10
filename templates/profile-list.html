@@ -5,12 +5,23 @@
 {% get_media_prefix as MEDIA_PREFIX %}
 
     <tr>
-        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+        <td style="padding-top: 25px;font-size: 24px;">
             <h1>Users List</h1>
+        </td>
+        <td style="padding-top: 25px;font-size: 24px;">
+            <form method='GET' action=''>
+                <div class="searchBox">
+                    <input class="searchInput" type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
+                    {% comment %} <input type="submit", value="Search"> {% endcomment %}
+                    <button class="searchButton" href="/viewprofile/{{ request.user.id }}">
+                        <i class="material-icons" style="font-size: 30px">⌕</i>
+                    </button>
+                </div>
+            </form>
         </td>
     </tr>
     <tr>
-        <td valign="top" height="500">
+        <td valign="top" height="500" colspan="2">
             <table cellpadding="5" cellspacing="0" width="100%" id="customers">
                 <tr align='center'>
                     <th>Status</th>
@@ -20,7 +31,7 @@
                     <th>Registered On</th>
                     <th>Licence Number</th>
                     <th>Licence Valid Date</th>
-                    <th>Licence</th>
+                    {% comment %} <th>Licence</th> {% endcomment %}
                     <th>Total Challan</th>
                     <th>Rank</th>
                 </tr>
@@ -32,8 +43,10 @@
                         <td>{{ profile.user.email }}</td>
                         <td>{{ profile.user.date_joined }}</td>
                         <td>{{ profile.drivers_licence_no }}</td>
-                        <td>{{ profile.licence_valid_date }}</td>
-                        <td><a href={{ MEDIA_PREFIX }}{{ profile.licence_img }}>View</a></td>
+                        <td>
+                            {{ profile.licence_valid_date }}<br>
+                            <a href={{ MEDIA_PREFIX }}{{ profile.licence_img }}>View</a>
+                        </td>
                         <td>{{ profile.total_challan }}</td>
                         <td>
                         {% if profile.rank < 400 %}
