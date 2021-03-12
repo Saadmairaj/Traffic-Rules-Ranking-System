@@ -1,0 +1,14 @@
+<form method="GET" action="">
+  <div class="searchBox">
+    <input
+      class="searchInput"
+      type="text"
+      name="q"
+      placeholder="Search"
+      value="{{ request.GET.q }}"
+    />
+    <button class="searchButton" href="/viewprofile/{{ request.user.id }}">
+      <i class="material-icons" style="font-size: 30px">⌕</i>
+    </button>
+  </div>
+</form>

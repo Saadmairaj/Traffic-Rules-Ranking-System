@@ -5,19 +5,11 @@
 {% get_media_prefix as MEDIA_PREFIX %}
 
     <tr>
-        <td style="padding-top: 25px;font-size: 24px;">
+        <td style="padding-top: 25px; font-size: 24px;">
             <h1>Users List</h1>
         </td>
-        <td style="padding-top: 25px;font-size: 24px;">
-            <form method='GET' action=''>
-                <div class="searchBox">
-                    <input class="searchInput" type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
-                    {% comment %} <input type="submit", value="Search"> {% endcomment %}
-                    <button class="searchButton" href="/viewprofile/{{ request.user.id }}">
-                        <i class="material-icons" style="font-size: 30px">⌕</i>
-                    </button>
-                </div>
-            </form>
+        <td style="padding-bottom: 25px; padding-right: 5px; font-size: 24px;">
+            {% include "search-bar.html" %}
         </td>
     </tr>
     <tr>
@@ -27,11 +19,10 @@
                     <th>Status</th>
                     <th>Username</th>
                     <th>Name</th>
-                    <th>Email Address</th>
+                    {% comment %} <th>Email Address</th> {% endcomment %}
                     <th>Registered On</th>
                     <th>Licence Number</th>
                     <th>Licence Valid Date</th>
-                    {% comment %} <th>Licence</th> {% endcomment %}
                     <th>Total Challan</th>
                     <th>Rank</th>
                 </tr>
@@ -40,7 +31,7 @@
                         <td>{{ profile.user.groups.all.0.name }}</td>
                         <td><a href="/viewprofile/{{ profile.user.id }}">{{ profile.user }}</a></td>
                         <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
-                        <td>{{ profile.user.email }}</td>
+                        {% comment %} <td>{{ profile.user.email }}</td> {% endcomment %}
                         <td>{{ profile.user.date_joined }}</td>
                         <td>{{ profile.drivers_licence_no }}</td>
                         <td>

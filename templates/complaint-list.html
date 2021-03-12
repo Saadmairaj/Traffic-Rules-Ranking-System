@@ -3,12 +3,15 @@
 {% load static %}
 {% block content %}
     <tr>
-        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+        <td style="padding-top: 25px;font-size: 24px;">
             <h1>Complaint List / Challan History</h1>
+        </td>
+        <td style="padding-bottom: 25px; padding-right: 15px; font-size: 24px;">
+            {% include "search-bar.html" %}
         </td>
     </tr>
     <tr>
-        <td  valign="top" height="500">
+        <td valign="top" height="500" colspan='2'>
             <table cellpadding="5" cellspacing="0" width="100%" id="customers">
                 <tr>
                     {% if request.user.groups.all.0.name == "Police" %}
@@ -25,7 +28,7 @@
                     <th>Resolved Date</th>
                     <th>Action</th>
                 </tr>
-                
+
                 {% for complaint in complaints %}
                     {% if request.user.groups.all.0.name == "Police" and complaint.complaint_type not in 'Bonus, Penalty' or request.user.groups.all.0.name != "Police" %}
                         <tr>

@@ -5,12 +5,15 @@
 {% get_media_prefix as MEDIA_PREFIX %}
 
     <tr>
-        <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+        <td style="padding-top: 25px;font-size: 24px;">
             <h1>Vehicle List</h1>
+        </td>
+        <td style="padding-bottom: 25px; padding-right: 5px; font-size: 24px;">
+            {% include "search-bar.html" %}
         </td>
     </tr>
     <tr>
-        <td valign="top" height="500">
+        <td valign="top" height="500" colspan="2" >
             <table cellpadding="5" cellspacing="0" width="100%" id="customers">
                 <tr align='center'>
                     {% if request.user.groups.all.0.name == "Police" %}
@@ -29,7 +32,14 @@
                 {% for vehicle in vehicles %}
                     <tr align='center'>
                         {% if request.user.groups.all.0.name == "Police" %}
-                            <td><a href="/viewprofile/{{ vehicle.owner.id }}"> {{ vehicle.owner }} </td>
+                            <td>
+                                <a href="/viewprofile/{{ vehicle.owner.id }}">
+                                    {{ vehicle.owner }}
+                                </a><br>
+                                {% if vehicle.owner == request.user %}
+                                    ( OWN )
+                                {% endif %}
+                            </td>
                         {% endif %}
                         <td>{{ vehicle.vehicle_no }}</td>
                         <td>{{ vehicle.company }}</td>
@@ -39,24 +49,32 @@
                         <td>{{ vehicle.date_created }}</td>
                         <td><a href={{ MEDIA_PREFIX }}{{ vehicle.rc_img }}>View</td>                        
                         <td>
-                            {% if vehicle.date_now == vehicle.insurance_date %}
-                                <span style="color: orange">{{ vehicle.insurance_date }}</span><br>
-                            {% elif vehicle.date_now > vehicle.insurance_date %}
-                                <span style="color: red">{{ vehicle.insurance_date }}</span><br>
+                            {% if vehicle.insurance_date %}
+                                {% if vehicle.date_now == vehicle.insurance_date %}
+                                    <span style="color: orange">{{ vehicle.insurance_date }}</span><br>
+                                {% elif vehicle.date_now > vehicle.insurance_date %}
+                                    <span style="color: red">{{ vehicle.insurance_date }}</span><br>
+                                {% else %}
+                                    <span style="color: green">{{ vehicle.insurance_date }}</span><br>
+                                {% endif %}
+                                <a href={{ MEDIA_PREFIX }}{{ vehicle.insurance_img }}>View
                             {% else %}
-                                <span style="color: green">{{ vehicle.insurance_date }}</span><br>
+                                None
                             {% endif %}
-                            <a href={{ MEDIA_PREFIX }}{{ vehicle.insurance_img }}>View
                         </td>
                         <td>
-                            {% if vehicle.date_now == vehicle.pollution_date %}
-                                <span style="color: orange">{{ vehicle.pollution_date }}</span><br>
-                            {% elif vehicle.date_now > vehicle.pollution_date %}
-                                <span style="color: red">{{ vehicle.pollution_date }}</span><br>
+                            {% if vehicle.pollution_date %}
+                                {% if vehicle.date_now == vehicle.pollution_date %}
+                                    <span style="color: orange">{{ vehicle.pollution_date }}</span><br>
+                                {% elif vehicle.date_now > vehicle.pollution_date %}
+                                    <span style="color: red">{{ vehicle.pollution_date }}</span><br>
+                                {% else %}
+                                    <span style="color: green">{{ vehicle.pollution_date }}</span><br>
+                                {% endif %}
+                                <a href="{{ MEDIA_PREFIX }}{{ vehicle.pollution_img }}">View
                             {% else %}
-                                <span style="color: green">{{ vehicle.pollution_date }}</span><br>
+                                None
                             {% endif %}
-                            <a href="{{ MEDIA_PREFIX }}{{ vehicle.pollution_img }}">View
                         </td>                        
                     </tr>
                 {% endfor %}
