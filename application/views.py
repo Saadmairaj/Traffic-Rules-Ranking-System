@@ -159,10 +159,29 @@ class ComplaintListView(ListView):
 
         group = self.request.user.groups.values_list('name', flat=True).first()
         if group == "Police":
-            queryset = queryset.filter(
-                police_station=self.request.user.profile.police_station)
+            queryset = queryset.filter(police_station=self.request.user.profile.police_station)
         else:
             queryset = queryset.filter(user=self.request.user)
+        
+        query = self.request.GET.get('q')
+        if query:
+            # Filter by first name, last name, email, licence_no.
+            query_fields = [Q(**{f: query}) for f in (
+                'user__username',
+                'complaint__icontains',
+                'complaint_type__iexact',
+                'status__iexact'
+                )   ]
+            q = query_fields[0]
+            for f in query_fields:
+                if 'user__username' in f.children[0] and group == 'General':
+                    continue
+                q |= f
+            try:
+                queryset = queryset.filter(q).distinct()
+            except (ValueError, ) as err: 
+                print(err)
+
         return queryset
 
 
@@ -177,13 +196,30 @@ class VehiclesListView(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        queryset = Vehicle.objects.filter().order_by('-id')
+        queryset = self.model.objects.filter(
+            ).order_by('-date_created')
         group = self.request.user.groups.values_list(
             'name', flat=True).first()
-        if group == "Police":
-            print("no any action")
-        else:
+        if group == "General":
             queryset = queryset.filter(owner=self.request.user)
+        
+        query = self.request.GET.get('q')
+        if query:
+            # Filter by first name, last name, email, licence_no.
+            query_fields = [Q(**{f: query}) for f in (
+                'owner__username', 
+                'fuel_type__icontains',
+                'manufacute_year',
+                # 'company',
+                'vehicle_no__icontains'
+                )   ]
+            q = query_fields[0]
+            for f in query_fields:
+                q |= f
+            try:
+                queryset = queryset.filter(q).distinct()
+            except (ValueError, ) as err: 
+                print(err)
         return queryset
 
 
@@ -209,13 +245,15 @@ class ProfilesListView(ListView):
     context_object_name = 'profiles'
 
     def get_queryset(self, **kwargs):
-        query_list = self.model.objects.filter(
+        queryset = self.model.objects.filter(
             ).order_by('-user__date_joined')
 
         query = self.request.GET.get('q')
         if query:
-            query_fields = [Q(**{f: str(query)}) for f in (
-                # 'user__username',
+
+            # Filter by first name, last name, email, licence_no.
+            query_fields = [Q(**{f: query}) for f in (
+                'user__username',
                 'user__first_name__iexact', 
                 'user__last_name__iexact',
                 'user__email__iexact', 
@@ -223,18 +261,21 @@ class ProfilesListView(ListView):
                 'drivers_licence_no__iexact',
                 # 'rank',
                 )   ]
-            query_fields += [Q(user__groups=1 if query in 'police' else 2)]
+            
+            # Filter by groups (status)
+            groups = {'police': 1, 'general': 2}
+            if query in groups:
+                query_fields += [Q(user__groups=groups[query.lower()])]
 
             q = query_fields[0]
             for f in query_fields:
                 q |= f
             try:
-                query_list = query_list.filter(
-                    q
-                ).distinct()
+                queryset = queryset.filter(q).distinct()
             except (ValueError, ) as err: 
                 print(err)
-        return query_list
+    
+        return queryset
 
 
 class PaymentView(UpdateView):
