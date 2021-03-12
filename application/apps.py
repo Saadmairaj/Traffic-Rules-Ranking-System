@@ -15,7 +15,7 @@ def email_details(name, doc, vehicle_no, over_due=False):
     subject = f"Reminder: The {doc} certificate of vehicle "\
               f"({vehicle_no}) is going to expire."
     if over_due:
-        message = messclearage.replace(
+        message = message.replace(
             'is going to expire soon.',
             'has expired. Driving without proper documents is traffic violation.')
         subject = subject.replace('is going to expire', 'has expired')
@@ -32,36 +32,37 @@ def send_email_due():
         for doc in (
                 ('pollution', vehicle.pollution_date),
                 ('insurance', vehicle.insurance_date)):
-            two_before_date = doc[1] - datetime.timedelta(2)
-            # Two Days before due date
-            if two_before_date <= today and today < doc[1]:
-                print('Due: ', vehicle.owner.first_name)
+            if doc[1]:
+                two_before_date = doc[1] - datetime.timedelta(2)
+                # Two Days before due date
+                if two_before_date <= today and today < doc[1]:
+                    print('Due: %s\n' %vehicle.owner.first_name)
 
-                def mail_user(): return send_mail(
-                    **email_details(
-                        name=vehicle.owner.first_name,
-                        vehicle_no=vehicle.vehicle_no,
-                        over_due=False, doc=doc[0]),
-                    from_email='testpython06@gmail.com',
-                    recipient_list=[vehicle.owner.email, ],
-                    fail_silently=False,
-                )
-                # mail_user()
-                # timethread(mail_user, join=True)
-            elif today >= doc[1]:
-                print('Overdue: ', vehicle.owner.first_name)
+                    def mail_user(): return send_mail(
+                        **email_details(
+                            name=vehicle.owner.first_name,
+                            vehicle_no=vehicle.vehicle_no,
+                            over_due=False, doc=doc[0]),
+                        from_email='testpython06@gmail.com',
+                        recipient_list=[vehicle.owner.email, ],
+                        fail_silently=False,
+                    )
+                    # mail_user()
+                    # timethread(mail_user, join=True)
+                elif today >= doc[1]:
+                    print('Overdue: %s\n' %vehicle.owner.first_name)
 
-                def mail_user(): return send_mail(
-                    **email_details(
-                        name=vehicle.owner.first_name,
-                        vehicle_no=vehicle.vehicle_no,
-                        over_due=False, doc=doc[0]),
-                    from_email='testpython06@gmail.com',
-                    recipient_list=[vehicle.owner.email, ],
-                    fail_silently=True,
-                )
-                # mail_user()
-                # timethread(mail_user, join=True)
+                    def mail_user(): return send_mail(
+                        **email_details(
+                            name=vehicle.owner.first_name,
+                            vehicle_no=vehicle.vehicle_no,
+                            over_due=False, doc=doc[0]),
+                        from_email='testpython06@gmail.com',
+                        recipient_list=[vehicle.owner.email, ],
+                        fail_silently=True,
+                    )
+                    # mail_user()
+                    # timethread(mail_user, join=True)
 
 
 year = datetime.datetime.now().year
