@@ -190,12 +190,12 @@ def update_rank_user(sender, **kw):
 
 
 class Company(models.Model):
-    compnay_name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
     company_website = models.CharField(max_length=200, null=True, blank=True)
     company_address = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return "{}".format(self.compnay_name)
+        return "{}".format(self.company_name)
 
 
 class Vehicle(models.Model):
