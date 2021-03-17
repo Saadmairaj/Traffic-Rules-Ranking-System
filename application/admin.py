@@ -19,7 +19,7 @@ class CustomUserAdmin(UserAdmin):
     inlines = (ProfileInline, )
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff',
                     'is_active')
-    list_per_page = 20
+    list_per_page = 100
 
     def get_inline_instances(self, request, obj=None):
         if not obj:
@@ -47,8 +47,8 @@ class ComplaintAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('compnay_name', 'company_website', 'company_address')
-    search_fields = ('compnay_name', 'company_website')
+    list_display = ('company_name', 'company_website', 'company_address')
+    search_fields = ('company_name', 'company_website')
     #list_filter = ('compnay_name', 'status', 'date_created',)
     list_per_page = 20
 
