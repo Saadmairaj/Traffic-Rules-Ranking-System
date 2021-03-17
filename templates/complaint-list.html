@@ -33,7 +33,12 @@
                     {% if request.user.groups.all.0.name == "Police" and complaint.complaint_type not in 'Bonus, Penalty' or request.user.groups.all.0.name != "Police" %}
                         <tr>
                             {% if request.user.groups.all.0.name == "Police" %}
-                                <td><a href="/viewprofile/{{ complaint.user.id }}">{{ complaint.user }}</a></td>
+                                <td>
+                                    <a href="/viewprofile/{{ complaint.user.id }}">{{ complaint.user }}</a>
+                                    {% if request.user == complaint.user %}
+                                       <br><p align="center" style="font-size: 10px">( OWN )</p>
+                                    {% endif %}
+                                </td>
                             {% else %}
                                 <td>{{ complaint.police_station }}</td>
                             {% endif %}
