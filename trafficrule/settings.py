@@ -22,6 +22,8 @@ SECRET_KEY = '0g4v98=!v$vd$u-n@9!uu2i985yh2!f^(&#$4k0a2e9)bl17#_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ITEMS_PER_PAGE = 20
+
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'application.apps.ApplicationConfig',
     'widget_tweaks',
     'payments',    # Not working need to research more.
+    # 'searchableselect',
 ]
 
 MIDDLEWARE = [
