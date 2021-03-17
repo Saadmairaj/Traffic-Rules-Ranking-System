@@ -19,6 +19,7 @@
                     <th>Status</th>
                     <th>Username</th>
                     <th>Name</th>
+                    <th>City</th>
                     {% comment %} <th>Email Address</th> {% endcomment %}
                     <th>Registered On</th>
                     <th>Licence Number</th>
@@ -31,7 +32,7 @@
                         <td>{{ profile.user.groups.all.0.name }}</td>
                         <td><a href="/viewprofile/{{ profile.user.id }}">{{ profile.user }}</a></td>
                         <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
-                        {% comment %} <td>{{ profile.user.email }}</td> {% endcomment %}
+                        <td>{{ profile.city }}</td>
                         <td>{{ profile.user.date_joined }}</td>
                         <td>{{ profile.drivers_licence_no }}</td>
                         <td>
@@ -51,6 +52,11 @@
                     </tr>
                 {% endfor %}
             </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            {% include "change-page.html" %}
         </td>
     </tr>
 {% endblock %}
