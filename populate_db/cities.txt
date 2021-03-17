@@ -1,0 +1,45 @@
+Mumbai, Maharashtra, MH
+Delhi, Delhi, DL
+Bangalore, Karnataka, KA
+Hyderabad, Telangana, TE
+Ahmedabad, Gujarat, GJ
+Chennai, Tamil Nadu, TN
+Kolkata, West Bengal, WB
+Surat, Gujarat, GJ
+Pune, Maharashtra, MH
+Jaipur, Rajasthan, RJ
+Lucknow, Uttar Pradesh, UP
+Kanpur, Uttar Pradesh, UP
+Nagpur, Maharashtra, MH
+Indore, Madhya Pradesh, MP
+Thane, Maharashtra, MH
+Bhopal, Madhya Pradesh, MP
+Visakhapatnam, Andhra Pradesh, AP
+Pimpri-Chinchwad, Maharashtra, MH
+Patna, Bihar, BR
+Vadodara, Gujarat, GJ
+Ghaziabad, Uttar Pradesh, UP
+Ludhiana, Punjab, PN
+Agra, Uttar Pradesh, UP
+Nashik, Maharashtra, MH
+Ranchi, Jharkhand, JK
+Faridabad, Haryana, HR
+Meerut, Uttar Pradesh, UP
+Rajkot, Gujarat, GJ
+Kalyan-Dombivli, Maharashtra, MH
+Vasai-Virar, Maharashtra, MH
+Varanasi, Uttar Pradesh, UP
+Srinagar, Jammu and Kashmir, JK
+Aurangabad, Maharashtra, MH
+Dhanbad, Jharkhand, JK
+Amritsar, Punjab, PN
+Navi Mumbai, Maharashtra, MH
+Allahabad, Uttar Pradesh, UP
+Howrah, West Bengal, WB
+Gwalior, Madhya Pradesh, MP
+Jabalpur, Madhya Pradesh, MP
+Coimbatore, Tamil Nadu, TN
+Vijayawada, Andhra Pradesh, AP
+Jodhpur, Rajasthan, RJ
+Madurai, Tamil Nadu, TN
+Noida, Uttar Pradesh, UP

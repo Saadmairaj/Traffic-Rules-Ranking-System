@@ -1,0 +1,20 @@
+Driving/Riding without Licence;; 5000
+Driving/Riding Under the Influence of an Intoxicating Substance;; 10000
+Overspeeding;; 2000
+Driving/Riding without Insurance;; 2000
+Driving without Seat Belt;; 1000
+Speeding and Racing;; 10000
+Dangerous Driving/Riding and Jumping Red Light;; 1000
+Violating Road Regulations;; 1000
+Driving/Riding While on the Mobile (Handheld);; 5000
+Driving/Riding Despite Disqualification;; 2000
+Not Giving Way to Emergency Vehicles like Ambulances, Fire Engines, etc;; 10000
+Riding without Helmet (rider and pillion rider);; 1000
+Overloading Two-Wheelers;; 20000
+Juvenile Offences;; 25000
+Overboarding Passengers;; 200
+Driving/Riding without Ticket;; 500
+Unauthorized Use of Vehicles Without Licence;; 5000
+Refusing to share information under orders of the Traffic Authority/Disobeying orders;; 2000
+Vehicles without Permit;; 10000
+Driving/Riding without Registration;; 10000
