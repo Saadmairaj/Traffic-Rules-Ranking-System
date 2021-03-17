@@ -1,6 +1,7 @@
 import datetime
 from pyexpat.errors import messages
 from django.db import transaction
+from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
@@ -9,9 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.views.generic import CreateView, TemplateView, ListView, UpdateView
+from django.views.generic.edit import FormView
 
-from application.forms import ProfileForm, UserForm, SignUpForm
-from application.models import Contact, Complaint, Vehicle, Profile
+from application.forms import ProfileForm, UserForm, SignUpForm, ContactForm
+from application.models import Complaint, Vehicle, Profile
 
 from payments import get_payment_model, RedirectNeeded
 
@@ -119,14 +121,17 @@ class HomePageView(TemplateView):
         return self.render_to_response(context)
 
 
-class ContactView(CreateView):
+class ContactView(FormView):
     """
     Contact Us Page
     """
-    model = Contact
-    fields = ['name', 'email', 'mobile', 'message']
+    form_class = ContactForm
     template_name = 'contact.html'
     success_url = '/thanks/'
+
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
 
 
 class ComplaintView(CreateView):
@@ -144,6 +149,7 @@ class ComplaintView(CreateView):
 
 
 class ComplaintListView(ListView):
+    paginate_by = settings.ITEMS_PER_PAGE
     model = Complaint
     fields = ['user', 'complaint_type', 'police_station', 'complaint',
               'challan_amount', 'status', 'resolved_date', 'resolved_message']
@@ -159,10 +165,13 @@ class ComplaintListView(ListView):
 
         group = self.request.user.groups.values_list('name', flat=True).first()
         if group == "Police":
-            queryset = queryset.filter(police_station=self.request.user.profile.police_station)
+            queryset = queryset.filter(
+                Q(police_station=self.request.user.profile.police_station) |
+                Q(user=self.request.user)
+            )
         else:
             queryset = queryset.filter(user=self.request.user)
-        
+
         query = self.request.GET.get('q')
         if query:
             # Filter by first name, last name, email, licence_no.
@@ -171,7 +180,7 @@ class ComplaintListView(ListView):
                 'complaint__icontains',
                 'complaint_type__iexact',
                 'status__iexact'
-                )   ]
+            )]
             q = query_fields[0]
             for f in query_fields:
                 if 'user__username' in f.children[0] and group == 'General':
@@ -179,13 +188,14 @@ class ComplaintListView(ListView):
                 q |= f
             try:
                 queryset = queryset.filter(q).distinct()
-            except (ValueError, ) as err: 
+            except (ValueError, ) as err:
                 print(err)
 
         return queryset
 
 
 class VehiclesListView(ListView):
+    paginate_by = settings.ITEMS_PER_PAGE
     model = Vehicle
     fields = '__all__'
     template_name = 'vehicle-list.html'
@@ -197,28 +207,28 @@ class VehiclesListView(ListView):
 
     def get_queryset(self, **kwargs):
         queryset = self.model.objects.filter(
-            ).order_by('-date_created')
+        ).order_by('-date_created')
         group = self.request.user.groups.values_list(
             'name', flat=True).first()
         if group == "General":
             queryset = queryset.filter(owner=self.request.user)
-        
+
         query = self.request.GET.get('q')
         if query:
             # Filter by first name, last name, email, licence_no.
             query_fields = [Q(**{f: query}) for f in (
-                'owner__username', 
+                'owner__username',
                 'fuel_type__icontains',
                 'manufacute_year',
                 # 'company',
                 'vehicle_no__icontains'
-                )   ]
+            )]
             q = query_fields[0]
             for f in query_fields:
                 q |= f
             try:
                 queryset = queryset.filter(q).distinct()
-            except (ValueError, ) as err: 
+            except (ValueError, ) as err:
                 print(err)
         return queryset
 
@@ -239,6 +249,7 @@ class ComplaintUpdateView(UpdateView):
 
 
 class ProfilesListView(ListView):
+    paginate_by = settings.ITEMS_PER_PAGE
     model = Profile
     fields = '__all__'
     template_name = 'profile-list.html'
@@ -246,7 +257,7 @@ class ProfilesListView(ListView):
 
     def get_queryset(self, **kwargs):
         queryset = self.model.objects.filter(
-            ).order_by('-user__date_joined')
+        ).order_by('-user__date_joined')
 
         query = self.request.GET.get('q')
         if query:
@@ -254,14 +265,15 @@ class ProfilesListView(ListView):
             # Filter by first name, last name, email, licence_no.
             query_fields = [Q(**{f: query}) for f in (
                 'user__username',
-                'user__first_name__iexact', 
+                'user__first_name__iexact',
                 'user__last_name__iexact',
-                'user__email__iexact', 
-                'user__email__icontains', 
+                'user__email__iexact',
+                'user__email__icontains',
                 'drivers_licence_no__iexact',
+                'city__iexact'
                 # 'rank',
-                )   ]
-            
+            )]
+
             # Filter by groups (status)
             groups = {'police': 1, 'general': 2}
             if query in groups:
@@ -272,9 +284,9 @@ class ProfilesListView(ListView):
                 q |= f
             try:
                 queryset = queryset.filter(q).distinct()
-            except (ValueError, ) as err: 
+            except (ValueError, ) as err:
                 print(err)
-    
+
         return queryset
 
 
