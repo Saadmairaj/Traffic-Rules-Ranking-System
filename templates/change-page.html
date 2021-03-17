@@ -1,0 +1,27 @@
+{% load url_query_sorter %}
+
+<table cellpadding="5" cellspacing="0" class="pageButton">
+    <div style="position:relative;">
+        <td>
+            {% if page_obj.has_previous %}
+                <p class='leftside'>
+                    <a class="pbtn" href="?{% query_transform request page=1 %}">❰❰</a>
+                    <a class="pbtn" href="?{% query_transform request page=page_obj.previous_page_number %}">❰</a>
+                </p>
+            {% endif %}
+        </td>
+        <td>
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </td>
+        <td>
+            {% if page_obj.has_next %}
+                <p class='rightside'>
+                    <a class="pbtn" href="?{% query_transform request page=page_obj.next_page_number %}">❱</a>
+                    <a class="pbtn" href="?{% query_transform request page=page_obj.paginator.num_pages %}">❱❱</a>
+                </p>
+            {% endif %}
+        </td>
+    </div>
+</table>

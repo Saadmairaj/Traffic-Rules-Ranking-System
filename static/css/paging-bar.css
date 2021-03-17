@@ -1,0 +1,41 @@
+table.pageButton {
+  width: 100%;
+  background-color: rgba(88, 120, 158, 0.541);
+}
+
+p.leftside {
+  text-align: left;
+  margin-left: 20%;
+}
+
+p.rightside {
+  text-align: right;
+  margin-right: 20%;
+}
+
+span.current {
+  height: 5em;
+  position: relative;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pbtn {
+  color: white;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #333;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pbtn:hover {
+  background-color: #ddd;
+  color: black;
+}
