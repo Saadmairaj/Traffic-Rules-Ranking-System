@@ -1,27 +1,12 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 from application.models import Profile
 
 
 class SignUpForm(UserCreationForm):
-    #first_name = forms.CharField(max_length=50, required=True)
-    #last_name = forms.CharField(max_length=50, required=True)
-    #email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
-
-    # first_name = forms.CharField(widget=forms.TextInput(
-    #     attrs={
-    #         'class': 'form-control',
-    #         'placeholder': 'Username'
-    #     }
-    # ))
-    # password1 = forms.CharField(widget=forms.PasswordInput(
-    #     attrs={
-    #         'class': 'form-control',
-    #         'placeholder': 'Password'
-    #     }
-    # ))
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name',
@@ -40,3 +25,24 @@ class ProfileForm(forms.ModelForm):
         fields = ('mobile', 'gender', 'dob', 'address',
                   'city', 'state', 'pin', 'country', 'drivers_licence_no',
                   'licence_img')
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    mobile = forms.IntegerField(required=True)
+    message = forms.CharField(widget=forms.Textarea)
+
+    def send_email(self):
+        message = "Your query has been registered." \
+                  " Someone from our team will contact" \
+                  " you on your registerted mobile" \
+                  " number {} at earliest."\
+                  .format(self.cleaned_data['mobile'])
+
+        return send_mail(
+            subject="Thanks for Contacting us!",
+            message=message,
+            from_email='testpython06@gmail.com',
+            recipient_list=[self.cleaned_data['email'], ],
+            fail_silently=False)
