@@ -88,19 +88,6 @@ class Profile(models.Model):
         instance.profile.save()
 
 
-class Contact(models.Model):
-    name = models.CharField(max_length=100, null=False, blank=False)
-    email = models.CharField(max_length=255, null=False, blank=False)
-    mobile = models.CharField(max_length=20, null=False, blank=False)
-    message = models.CharField(max_length=500, null=False, blank=False)
-    status = models.PositiveSmallIntegerField(db_index=False, default=1)
-    date_created = models.DateTimeField(default=timezone.now)
-    date_updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-
 class Complaint(models.Model):
     STATUS = (
         ('Approved', 'Approved'),
@@ -119,7 +106,7 @@ class Complaint(models.Model):
         User, on_delete=models.CASCADE, null=True, blank=True)
     complaint_type = models.CharField(max_length=50, choices=TYPE)
     police_station = models.ForeignKey(
-        PoliceStation, on_delete=models.CASCADE, verbose_name='Police Sttion')
+        PoliceStation, on_delete=models.CASCADE, verbose_name='Police Station')
     complaint = models.TextField(max_length=500)
     challan_amount = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS, default="Pending")
@@ -224,7 +211,7 @@ class Vehicle(models.Model):
     vehicle_no = models.CharField(max_length=20, unique=True)
     model_no = models.CharField(max_length=50)
     fuel_type = models.CharField(max_length=20, choices=FUEL)
-    manufacute_year = models.CharField(max_length=100, unique=True)
+    manufacute_year = models.CharField(max_length=100)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     registered_address = models.CharField(
         max_length=200, null=True, blank=True)
