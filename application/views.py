@@ -1,5 +1,6 @@
 import datetime
-from pyexpat.errors import messages
+# from pyexpat.errors import messages
+from django.contrib import messages
 from django.db import transaction
 from django.conf import settings
 from django.db.models import Q
@@ -12,8 +13,8 @@ from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.views.generic import CreateView, TemplateView, ListView, UpdateView
 from django.views.generic.edit import FormView
 
-from application.forms import ProfileForm, UserForm, SignUpForm, ContactForm
-from application.models import Complaint, Vehicle, Profile
+from application.forms import ComplaintForm, ComplaintPaymentForm, ProfileForm, UserForm, SignUpForm, ContactForm
+from application.models import Complaint, PoliceStation, Vehicle, Profile
 
 from payments import get_payment_model, RedirectNeeded
 
@@ -86,11 +87,10 @@ def update_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            # messages.success(request, 'Your profile was successfully updated!')
+            messages.success(request, 'Your profile was successfully updated!')
             return redirect('profile')
-        # else:
-        #     print("aaaaaaaaa")
-            #messages.error(request, 'Please correct the error below.')
+        else:
+            messages.error(request, 'Please correct the error below.')
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
@@ -134,15 +134,20 @@ class ContactView(FormView):
         return super().form_valid(form)
 
 
-class ComplaintView(CreateView):
+class ComplaintView(FormView):
     model = Complaint
-    fields = ['complaint_type', 'police_station', 'user',
-              'complaint', 'challan_amount', 'status']
+    form_class = ComplaintForm
     template_name = 'complaint.html'
     success_url = '/thanks/'
 
     def form_valid(self, form, *args, **kwargs):
         obj = form.save(commit=False)
+        obj.user = User.objects.filter(
+            username=form.cleaned_data['user']).first()
+        obj.police_station = PoliceStation.objects.filter(
+            station_city=form.cleaned_data['police_station']).first()
+        obj.status = form.cleaned_data['status']
+        obj.complaint_type = form.cleaned_data['complaint_type']
         obj.save()
         obj.send_email()
         return super(ComplaintView, self).form_valid(form)
@@ -194,6 +199,42 @@ class ComplaintListView(ListView):
         return queryset
 
 
+class ComplaintChallan(CreateView):
+    model = Complaint
+    fields = ['police_station', 'complaint', 'challan_amount']
+    template_name = 'complaint-challan.html'
+    success_url = '/thanks/'
+
+    def render_to_response(self, context, **response_kwargs):
+        print(context, self.kwargs)
+        context['challan_user'] = User.objects.get(pk=self.kwargs.get('pk'))
+        return super().render_to_response(context, **response_kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        obj = form.save(commit=False)
+        obj.user = User.objects.get(pk=self.kwargs.get('pk'))
+        obj.complaint_type = 'Challan'
+        obj.status = 'Due'
+        obj.save()
+        obj.send_email(challan=True)
+        return super(ComplaintChallan, self).form_valid(form)
+
+
+class ComplaintUpdateView(UpdateView):
+    model = Complaint
+    fields = ['status', 'resolved_message', 'challan_amount']
+    template_name = 'complaint.html'
+    success_url = '/thanks/'
+
+    def form_valid(self, form, *args, **kwargs):
+        obj = form.save(commit=False)
+        obj.resolved_by = self.request.user
+        obj.resolved_date = datetime.datetime.now()
+        obj.save()
+        obj.send_email(resolved=True)
+        return super(ComplaintUpdateView, self).form_valid(form)
+
+
 class VehiclesListView(ListView):
     paginate_by = settings.ITEMS_PER_PAGE
     model = Vehicle
@@ -208,11 +249,9 @@ class VehiclesListView(ListView):
     def get_queryset(self, **kwargs):
         queryset = self.model.objects.filter(
         ).order_by('-date_created')
-        group = self.request.user.groups.values_list(
-            'name', flat=True).first()
-        if group == "General":
+        group = self.request.user.groups.all()
+        if "Police" not in group:
             queryset = queryset.filter(owner=self.request.user)
-
         query = self.request.GET.get('q')
         if query:
             # Filter by first name, last name, email, licence_no.
@@ -231,21 +270,6 @@ class VehiclesListView(ListView):
             except (ValueError, ) as err:
                 print(err)
         return queryset
-
-
-class ComplaintUpdateView(UpdateView):
-    model = Complaint
-    fields = ['status', 'resolved_message', 'challan_amount']
-    template_name = 'complaint.html'
-    success_url = '/thanks/'
-
-    def form_valid(self, form, *args, **kwargs):
-        obj = form.save(commit=False)
-        obj.resolved_by = self.request.user
-        obj.resolved_date = datetime.datetime.now()
-        obj.save()
-        obj.send_email(resolved=True)
-        return super(ComplaintUpdateView, self).form_valid(form)
 
 
 class ProfilesListView(ListView):
@@ -286,21 +310,20 @@ class ProfilesListView(ListView):
                 queryset = queryset.filter(q).distinct()
             except (ValueError, ) as err:
                 print(err)
-
         return queryset
 
 
 class PaymentView(UpdateView):
     model = Complaint
-    fields = ['challan_amount', 'status']
+    form_class = ComplaintPaymentForm
     template_name = 'payment.html'
     success_url = '/thanks/'
 
     def form_valid(self, form, *args, **kwargs):
         obj = form.save(commit=False)
-        obj.save()
         obj.resolved_by = self.request.user
         obj.resolved_date = datetime.datetime.now()
         obj.status = 'Paid'
+        obj.save()
         obj.send_email(challan=True)
         return super(PaymentView, self).form_valid(form)
