@@ -2,7 +2,9 @@ import datetime
 from event import timethread, run_once
 from django.apps import AppConfig
 from django.core.mail import send_mail
-from functools import partial
+
+from multiprocessing.pool import ThreadPool
+from collections import deque
 
 
 def email_details(name, doc, vehicle_no, over_due=False):
@@ -103,5 +105,44 @@ class ApplicationConfig(AppConfig):
     name = 'application'
 
     def ready(self):
-        send_email_due()
-        rank_at_end()
+        # return
+        # send_email_due()
+        # rank_at_end()
+
+        from populate_db import (populateProfile, populateVehicle, 
+                                 populatePolice, populateComplaint)
+        
+        ## ADD ALL COMPANIES AT ONCE
+        # populateCompany()
+
+        ## LOOP
+        # for i in range(5000):
+        ##  ADDING POLICE STATION WITH EMPLOYEES.
+        #     populatePolice(i)
+
+        ##  ADDING COMPLAINTS (FIR, CHALLANS).
+            # populateComplaint(i)
+
+        ##  ADDING VEHICLES TO USERS.
+            # populateVehicle(i)
+
+        ##  ADDING USERS.
+        #     populateProfile(i)
+
+
+        ######## TETSING THREADING #######
+        # threadn = 8
+        # pool = ThreadPool(processes=threadn)
+        # pending = deque()
+
+        # for i in range(10000):
+        #     while len(pending) > 0 and pending[0].ready():
+        #         pending.pop().get()
+            
+        #     # if len(pending) <= threadn:
+        #     task = pool.apply_async(populateProfile, (i, ))
+        #     pending.append(task)
+        #     # populateProfile(i)
+        
+        
+        return
