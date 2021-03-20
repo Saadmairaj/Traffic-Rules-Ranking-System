@@ -475,7 +475,6 @@ class _Complaint:
         return self._date_created
 
 
-
 ########################################################################
 ############################### POPULATE ###############################
 ########################################################################
@@ -595,7 +594,6 @@ def populateComplaint(num=''):
     )
     complaint.save()
     return complaint
-
 
 
 def delete_invalid_entries():
