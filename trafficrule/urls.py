@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 from application import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import reverse_lazy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,11 +30,18 @@ urlpatterns = [
     url(r'^login/$',auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     url(r'^myaccount/$', views.update_profile, name='profile'),
     url(r'^viewprofile/(?P<pk>[0-9]+)/$', views.view_profile, name='view-profile'),
-    url(r'^password/$', views.change_password, name='account/change_password'),
+    url(r'^password/$', auth_views.PasswordChangeView.as_view(
+        template_name='account/change_password.html', 
+        success_url='/password-done',
+        ), name='account/change_password'),
+    url(r'^password-done/$', TemplateView.as_view(
+        template_name='account/change_password_done.html'), 
+        name='account/change_password_done'),
     url(r'^logout/$', auth_views.LogoutView.as_view(template_name="account/loggedout.html"), name='logout'),
     url(r'^thanks/$', TemplateView.as_view(template_name='thank-you.html'), name='thanks'),
     url(r'^contact/$', views.ContactView.as_view(), name='contact-us'),
     url(r'^complaint/$', views.ComplaintView.as_view(), name='complaint'),
+    url(r'^complaint-challan/(?P<pk>[0-9]+)$', views.ComplaintChallan.as_view(), name='challan-complaint'),
     url(r'^complaint-list/$', views.ComplaintListView.as_view(), name='complaint-list'),
     url(r'^vehicles/$', views.VehiclesListView.as_view(), name='vehicles'),
     url(r'^update-complaint/(?P<pk>[0-9]+)/$', views.ComplaintUpdateView.as_view(), name='update-complaint'),
