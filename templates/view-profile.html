@@ -4,7 +4,11 @@
 {% block content %}
 {% get_media_prefix as MEDIA_PREFIX %}
 
-    <tr>
+    {% comment %} <tr>
+        
+    </tr> {% endcomment %}
+    <tr>   
+        
         <td style="width: 250px;">
             {% if user.groups.all.0.name == "Police" %}
                 {% include "police-profilepic-sidebar.html" %}
@@ -15,7 +19,7 @@
         <td  valign="top" style="padding: 10px;border-left: solid 1px #ccc;">
             <table cellpadding="5" cellspacing="0" width="100%">
                 <tr>
-                    <td colspan="2" style="padding-top: 25px;font-size: 24px;">
+                    <td colspan="2" style="padding-top: 25px; font-size: 24px;">
                         <h1>{{ user.first_name }} {{ user.last_name }} ({{ user }}) </h1>
                     </td>
                 </tr>
@@ -44,6 +48,13 @@
                     </td>
                 </tr>
             </table>
+        </td>
+        <td valign="top" style="padding-top: 27px; padding-right: 5px">
+            <form action="", method="GET">
+                {% if request.user.groups.all.0.name == "Police" %}
+                    <a href="/complaint-challan/{{ user.pk }}" class="button button3">Challan</a>
+                {% endif %} 
+            </form>
         </td>
     </tr>
 {% endblock %}
