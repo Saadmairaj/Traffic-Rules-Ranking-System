@@ -48,10 +48,10 @@
                             {% for field in profile_form %}
                                 <div class="form-group">
                                     {{ field.label_tag }}
-                                    {% if field.value == user.profile.licence_img %}
+                                    {% if field == profile_form.licence_img %}
                                         <a href={{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}>
                                         <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250></a>
-                                    {% elif field.value == user.profile.drivers_licence_no %}
+                                    {% elif field == profile_form.drivers_licence_no %}
                                         {{ field.value }}
                                     {% else %}
                                         {{ field|add_class:"form-control dark" }}
