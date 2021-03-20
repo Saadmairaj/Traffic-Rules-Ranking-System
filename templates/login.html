@@ -24,22 +24,22 @@
                 </tr>
                 <tr>
                     <td style="line-height: 22px;padding: 20px;">
-                         <form method="post">
-                        {% csrf_token %}
-                         {% for field in form %}
-                             <div class="form-group">
-                                 {{ field.label_tag }}
-                                 {{ field|add_class:"form-control dark" }}
-                                 {% if field.help_text %}
-                                  <small style="color: grey">{{ field.help_text }}</small>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field|add_class:"form-control dark" }}
+                                    {% if field.help_text %}
+                                    <small style="color: grey">{{ field.help_text }}</small>
                                 {% endif %}
                                 {% for error in field.errors %}
-                                  <p style="color: red">{{ error }}</p>
+                                    <p style="color: red">{{ error }}</p>
                                 {% endfor %}
-                                  </div>
+                                    </div>
                             {% endfor %}
-                        <button type="submit" class="button button1">Login</button>
-                    </form>
+                            <button type="submit" class="button button1">Login</button>
+                        </form>
                     </td>
                 </tr>
             </table>
