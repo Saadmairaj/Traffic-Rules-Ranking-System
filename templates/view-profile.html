@@ -49,12 +49,14 @@
                 </tr>
             </table>
         </td>
-        <td valign="top" style="padding-top: 27px; padding-right: 5px">
-            <form action="", method="GET">
-                {% if request.user.groups.all.0.name == "Police" %}
-                    <a href="/complaint-challan/{{ user.pk }}" class="button button3">Challan</a>
-                {% endif %} 
-            </form>
-        </td>
+        {% if request.user != user and request.user.groups.all.0.name == "Police" %}
+            <td valign="top" style="padding-top: 27px; padding-right: 5px">
+                <form action="", method="GET">
+                    <a href="/complaint-challan/{{ user.pk }}" class="button button3">
+                        Challan
+                    </a>
+                </form>
+            </td>
+        {% endif %}
     </tr>
 {% endblock %}
