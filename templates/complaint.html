@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 {% load static %}
+{% load get_model_queryset %}
 {% block content %}
     <tr>
         <td style="width: 250px;">
@@ -15,12 +16,49 @@
                 </tr>
                 <tr>
                     <td style="line-height: 22px;padding: 20px;">
-                        <form method="post" id="contactForm" name="contactForm" class="form2">
+                        <form method="post" id="contactForm" name="contactForm" class="form2" action="">
                             {% csrf_token %}
+                            <div class="form-group">
+                                {% if form.user in form.visible_fields %}
+                                    Username: <br>
+                                    <input list="user" name="user" id="user-id" />
+                                    <datalist id="user">
+                                        {% for user in "username"|get_user_model %}
+                                            <option value="{{ user }}">
+                                        {% endfor %}
+                                    </datalist><br><br>
+                                {% endif %}
+                                Police Station: <br>
+                                <input list="police_station" name="police_station" id="police_station-id" />
+                                <datalist id="police_station">
+                                    {% for station in "station_city"|get_police_model %}
+                                        <option value="{{ station }}">
+                                    {% endfor %}
+                                </datalist><br><br>
+
+                                Status: <br>
+                                <input list="status" name="status" id="status-id" />
+                                <datalist id="status">
+                                    {% for status in ""|get_complaint_status %}
+                                        <option value="{{ status }}">
+                                    {% endfor %}
+                                </datalist><br><br>
+
+                                Complaint Type: <br>
+                                <input list="complaint_type" name="complaint_type" id="complaint_type-id" />
+                                <datalist id="complaint_type">
+                                    {% for type in ""|get_complaint_type %}
+                                        <option value="{{ type }}">
+                                    {% endfor %}
+                                </datalist> 
+
+                            </div>
                             {% for field in form.visible_fields  %}
                                 <div class="form-group">
                                     {{ field.errors }}
-                                    {{ field.label_tag }} {{ field }}
+                                    {% if form.user != field and form.police_station != field and form.status != field and form.complaint_type != field %}
+                                        {{ field.label_tag }} {{ field }}
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                             <button id="submitbtn" class="button button1" name="submit" type="submit">Submit</button>
@@ -31,3 +69,5 @@
         </td>
     </tr>
 {% endblock %}
+
+{% comment %} and 'police' not in field.label_tag {% endcomment %}
