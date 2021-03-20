@@ -2,8 +2,11 @@ from django import forms
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.db.models import fields
+from django.forms.models import ModelForm
+from django.forms.widgets import TextInput
 
-from application.models import Profile
+from application.models import Complaint, Profile
 
 
 class SignUpForm(UserCreationForm):
@@ -46,3 +49,23 @@ class ContactForm(forms.Form):
             from_email='testpython06@gmail.com',
             recipient_list=[self.cleaned_data['email'], ],
             fail_silently=False)
+
+
+class ComplaintForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['complaint', 'challan_amount']
+
+    user = forms.CharField(max_length=100, widget=forms.TextInput)
+    status = forms.CharField(max_length=100, widget=forms.TextInput)
+    complaint_type = forms.CharField(max_length=100, widget=forms.TextInput)
+    police_station = forms.CharField(max_length=100, widget=forms.TextInput)
+
+
+class ComplaintPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['challan_amount', 'status']
+
+    status = forms.CharField(disabled=True)
+    challan_amount = forms.CharField(disabled=True)
