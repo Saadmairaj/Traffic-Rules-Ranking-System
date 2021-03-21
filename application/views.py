@@ -1,10 +1,9 @@
 import datetime
-# from pyexpat.errors import messages
 from django.contrib import messages
 from django.db import transaction
 from django.conf import settings
 from django.db.models import Q
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.template.response import TemplateResponse
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -167,12 +166,12 @@ class ComplaintListView(ListView):
 
     def get_queryset(self, **kwargs):
         queryset = Complaint.objects.filter().order_by('-id')
-
-        group = self.request.user.groups.values_list('name', flat=True).first()
-        if group == "Police":
+        if "Police" in self.request.user.groups.values_list('name', flat=True):
             queryset = queryset.filter(
                 Q(police_station=self.request.user.profile.police_station) |
-                Q(user=self.request.user)
+                Q(user=self.request.user), 
+                ~Q(~Q(user=self.request.user), complaint_type="Bonus"),
+                ~Q(~Q(user=self.request.user), complaint_type='Penalty')
             )
         else:
             queryset = queryset.filter(user=self.request.user)
@@ -247,10 +246,8 @@ class VehiclesListView(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        queryset = self.model.objects.filter(
-        ).order_by('-date_created')
-        group = self.request.user.groups.all()
-        if "Police" not in group:
+        queryset = self.model.objects.filter().order_by('-date_created')
+        if "Police" not in self.request.user.groups.values_list('name', flat=True):
             queryset = queryset.filter(owner=self.request.user)
         query = self.request.GET.get('q')
         if query:
@@ -285,7 +282,6 @@ class ProfilesListView(ListView):
 
         query = self.request.GET.get('q')
         if query:
-
             # Filter by first name, last name, email, licence_no.
             query_fields = [Q(**{f: query}) for f in (
                 'user__username',
@@ -299,9 +295,10 @@ class ProfilesListView(ListView):
             )]
 
             # Filter by groups (status)
-            groups = {'police': 1, 'general': 2}
-            if query in groups:
-                query_fields += [Q(user__groups=groups[query.lower()])]
+            groups = {'Police': 1, 'RTO': 2, 'General': 3}
+            if query.lower().capitalize() in groups:
+                query_fields += [
+                    Q(user__groups=groups[query.lower().capitalize()])]
 
             q = query_fields[0]
             for f in query_fields:
