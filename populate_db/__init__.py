@@ -192,7 +192,7 @@ class _Person:
 
     @property
     def licence_imagepath(self):
-        if self.gender == 'female':
+        if self.gender.lower() == 'female':
             return 'Assets/template_license_f.pdf'
         return 'Assets/template_license.pdf'
 
@@ -579,8 +579,10 @@ def populatePolice(num=''):
     return ps
 
 
-def populateComplaint(num=''):
+def populateComplaint(num='', challan=False):
     c = _Complaint()
+    if challan:
+        c._type = 'Challan'
     print(num, c.user, c.type)
 
     complaint = Complaint(
