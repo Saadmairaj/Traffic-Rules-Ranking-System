@@ -70,14 +70,14 @@ def send_email_due():
 year = datetime.datetime.now().year
 last_date = datetime.date(year, 12, 31)
 
-@run_once
-@timethread(date_time=last_date, time_interval=1000, quiet=True)
+@run_once  # for testing purposes only 
+# @timethread(date_time=last_date, time_interval=1000, quiet=True)
 def rank_at_end():
     from application.models import (Profile, Complaint,
                                     PoliceStation)
     
     for profile in Profile.objects.all():
-        if profile.rank == 500:
+        if profile.rank <= 500:
             print('Bonus', profile.user)
             Complaint(
                 user=profile.user,
@@ -116,12 +116,12 @@ class ApplicationConfig(AppConfig):
         # populateCompany()
 
         ## LOOP
-        # for i in range(5000):
+        # for i in range(10000):
         ##  ADDING POLICE STATION WITH EMPLOYEES.
         #     populatePolice(i)
 
         ##  ADDING COMPLAINTS (FIR, CHALLANS).
-            # populateComplaint(i)
+            # populateComplaint(i, challan=True)
 
         ##  ADDING VEHICLES TO USERS.
             # populateVehicle(i)
