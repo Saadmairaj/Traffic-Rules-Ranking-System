@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 
 from multiprocessing.pool import ThreadPool
 from collections import deque
+from date_time_event import Untiltime
 
 
 def email_details(name, doc, vehicle_no, over_due=False):
@@ -72,10 +73,10 @@ last_date = datetime.date(year, 12, 31)
 
 @run_once  # for testing purposes only 
 # @timethread(date_time=last_date, time_interval=1000, quiet=True)
+@Untiltime(dateOrtime=last_date, daemon=True)
 def rank_at_end():
     from application.models import (Profile, Complaint,
                                     PoliceStation)
-    
     for profile in Profile.objects.all():
         if profile.rank <= 500:
             print('Bonus', profile.user)
@@ -107,7 +108,7 @@ class ApplicationConfig(AppConfig):
     def ready(self):
         # return
         # send_email_due()
-        # rank_at_end()
+        rank_at_end()
 
         from populate_db import (populateProfile, populateVehicle, 
                                  populatePolice, populateComplaint)
