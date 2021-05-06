@@ -2,9 +2,6 @@ from django import forms
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.db.models import fields
-from django.forms.models import ModelForm
-from django.forms.widgets import TextInput
 
 from application.models import Complaint, Profile
 
