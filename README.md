@@ -37,8 +37,6 @@ Traveller/driver data frameworks have been created as Comprehensive Automobile T
  A great deal of advancements have been created in the field of flagging
  occurrence and clog discovery frameworks have been created which use on
  models have been created to aid occurrence recuperation and traffic preoccupation methodologies.
-17
-Variable message signs have been intended to educate the driver regarding the ongoing parking spots accessible, path traffic conditions, occurrences on the path, climate conditions. Different frameworks include better data frameworks at transport stands that illuminate the worker about the transport courses, time of the following transport appearance, charge structure and so on. Other related advancements incorporate Automatic vehicle finding frameworks which utilize the ordinary Global situating frameworks.
 
 ## Modules
 
