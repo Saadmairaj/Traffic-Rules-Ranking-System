@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 {% load static %}
 {% block content %}
+{% load python_functions %}
 {% get_media_prefix as MEDIA_PREFIX %}
 
     {% comment %} <tr>
@@ -39,7 +40,12 @@
                                 {{ field.label_tag }}
                                 {% if field.value == user.profile.licence_img %}
                                     <a href={{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}>
-                                    <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250></a>
+                                        {% if profile_form.licence_img.value|endswith:".pdf" %}
+                                            <embed src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250>    
+                                        {% else %}
+                                            <img src="{{ MEDIA_PREFIX }}{{ profile_form.licence_img.value }}" width=250>
+                                        {% endif %}
+                                    </a>
                                 {% else %}
                                     {{ field.value }}
                                 {% endif %}
