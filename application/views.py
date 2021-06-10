@@ -187,7 +187,7 @@ class ComplaintListView(ListView):
             )]
             q = query_fields[0]
             for f in query_fields:
-                if 'user__username' in f.children[0] and group == 'General':
+                if 'user__username' in f.children[0]: #and group == 'General':
                     continue
                 q |= f
             try:
@@ -215,7 +215,7 @@ class ComplaintChallan(CreateView):
         obj.complaint_type = 'Challan'
         obj.status = 'Due'
         obj.save()
-        obj.send_email(challan=True)
+        obj.send_email()
         return super(ComplaintChallan, self).form_valid(form)
 
 
