@@ -1,63 +1,79 @@
 # Traffic Rule Violation Ranking System
 
-Traffic the executives advances have been grown essentially in Europe,
-10
-related issues which are extensively Travel delays, stopping issues and
-11
-The reasons for delays are request and supply hole, wasteful flagging
-frameworks, Incidents on the streets, shortage of foundation, wasteful traveller
-data frameworks and postponements because of tolls. The innovation
-10
-For appropriate travel request the executives, the strategies being utilized are
-Car-pooling, Park and Ride frameworks, odd even auto limitations, faltering of
-available time and clog estimating. Contextual investigations from Japan and
-Singapore show that these systems if appropriately executed can improve traffic
-situation. On the stockpile the executives side the procedures include either
-arrangement of more street foundation or presentation of better mass vehicle
-frameworks. Proficient transport frameworks with need paths/signals and
-imaginative mass travel frameworks like Rail quick travel (RRT), Shuttle circle
-travel (SLT), Group fast travel (GRT), individual quick travel (PRT) and LRT
-13
- America and Japan. Advances have been created in view to counter traffic
- wellbeing issues. The reasons for these issues have been handled through innovation intercession of different levels.
-12
-  arrangements that have been created far and wide incorporate the accompanying:
- (light rail travel) have been created and utilized everywhere throughout the world. Each city has embraced any of these frameworks as per the requirements.
-Other related advances like Intelligent Community Vehicle System, programmed ticketing frameworks add to the smoothing out of mass travel frameworks.
-14
-frameworks. The patterns of traffic signals has developed from fixed time customized signals towards indicator based ongoing traffic signals. Innovation inputs have improved both on equipment and programming sides of flagging frameworks. Progressively frameworks, identifiers are introduced on each convergence, that tallies the quantity of vehicles that line at any crossing point arm. The contributions from the finder are prepared by a controller programming and signals are synchronized so that substantial traffic ways are given longer clearways. A great deal of mechanical enhancements have been accounted for in equipment, for example, identifier types, controllers, connectors, signals. Thus there are various virtual products created like SCOOT, SCAT, MOVA. Related programming like ASTRID, INGRID are utilized for constant traffic information investigation and episode discovery.
-Another arrangement of mechanical improvement is as occurrence recognition frameworks which contribute generously to traffic frameworks. Programmed
-15
-street sensors to send data to control space for sure fire recuperation. Further
-blockage is maintained a strategic distance from through radio data
-communicates, reconnaissance transmissions, airborne video. Reproduction
-16
-Traveller/driver data frameworks have been created as Comprehensive Automobile Traffic Control frameworks, Internet based course frameworks, Electronic course direction framework, phone data administration, Driver Information and early admonition frameworks. Every one of these frameworks incorporate innovations to help the driver to choose the best travel course.
-18
- A great deal of advancements have been created in the field of flagging
- occurrence and clog discovery frameworks have been created which use on
- models have been created to aid occurrence recuperation and traffic preoccupation methodologies.
+<p align="center">
+<img width="700" alt="Screenshot 2021-06-10 at 22 56 54" src="https://user-images.githubusercontent.com/46227224/121570102-29532f80-ca3f-11eb-9280-8f9cfc6b8de0.png">
+</p>
+
+## Introduction
+
+1. In the current scenario, the key issue faced by commuters while travelling is to deal with the inefficiency and discrepancy in the traffic system and the people involved in managing the same. 
+2. On being caught by the police, the commuter must submit his driving license, RC Book and/or other vehicle documents for verification. In case the commuter forgets/misplaces the documents, he/she is unnecessarily fined. 
+3. In case a vehicle is booked for any traffic violations, the details are uploaded onto a website. The owner is not updated with this information. If he fails to check this website regularly, he may not be aware of any pending traffic violations on his vehicles. 
+4. In case a vehicle is stolen, the owner must contact the nearest police station. The process to lodge a complaint and subsequent response is slow and inefficient. 
+
+## Detailed Diagram
+
+<p align="center">
+<img width="700" alt="Screenshot 2021-06-10 at 22 56 54" src="https://user-images.githubusercontent.com/46227224/121570314-60294580-ca3f-11eb-8ad8-5c73451b23c6.png">
+</p>
+
 
 ## Modules
 
-Project Divided into three modules i.e
+1. RTO module architecture
+2. Police module architecture
+3. General user module architecture
 
-## User
+### RTO Module Architecture
+<p align="center">
+<img width="300" alt="Screenshot 2021-06-10 at 22 56 54" src="https://user-images.githubusercontent.com/46227224/121570641-ac748580-ca3f-11eb-9c2e-b54c1c539659.png">
+</p>
 
-Normal Person : Driver Details(licence, rc, insurance, pollution), view challan, challan history, pay challan, File a stolen report of his vehicle.
-Police: View anyone's challan history, view driver details, give challan, see stolen reports.
+This module is explicitly intended for the RTO director and it comprises of data's identified with the client permit and vehicle. This data will be put away in the database.
 
-## RTO
+### Police Module Architecture
 
-Admin access: Create(new)/delete(old) user accounts(user, police).
-Register new vehicle to owner in the database.
+<p align="center">
+<img width="300" alt="Screenshot 2021-06-10 at 22 56 54" src="https://user-images.githubusercontent.com/46227224/121570774-d168f880-ca3f-11eb-85c5-ffc88cab74c8.png">
+</p>
 
-## Ranking system
+This module principally centers around giving the data just to the police. It comprises of vehicle data and permit information's. It too creates the fine.
+Signs in through the application using the user id provided to him as authentication.
 
-- User gets bonus on not getting challan for a year or a specific time period.
-- User has to pay heavy fine on getting challan often in an year or a specific time.
+1. Can enter a vehicle number to view the owner’s or vehicle’s documents and previous unpaid offences.
+2. Can report any offences committed by the driver.
+3. Receives reports about vehicles stolen under his jurisdiction/working location.
 
-## Traffic signs details page
+![image](https://user-images.githubusercontent.com/46227224/121570801-d9289d00-ca3f-11eb-8bb6-bc89b3605165.png)
 
-One page with all the traffic signs and traffic rules.
+
+### General user architecture
+
+<p align="center">
+<img width="300" alt="Screenshot 2021-06-10 at 22 56 54" src="https://user-images.githubusercontent.com/46227224/121570934-02e1c400-ca40-11eb-8861-37b28c851b48.png">
+</p>
+
+1. Signs in through the application using the user id provided for authentication.
+2. Can view all the latest documents such as driving license, owned vehicle details, RC, latest emission test certificate, insurance copy, etc. in their account.
+3. Can report stolen vehicle to notify the nearest police.
+4. Can check/pay any unpaid offences on his vehicle.
+
+## Problems
+
+1. The proposed system overcomes these issues in the current scenario by implementing a web server which uses a database to store, update and access the above mentioned documents with a user-friendly application, tailored to the needs of the appropriate users. 
+2. The application also allows users to report a stolen vehicle and check unpaid offences on his vehicle, all in the click of a button. 
+3. The application for the police allows him to review earlier driving offences by the rider and also report any current offence committed by him. 
+
+
+## Solution
+
+1. Proposed project is an approach to solve such problems that is by storing all the information related to vehicle and driver at database by RTO administrator.
+2. A application is provided to traffic police to retrieve vehicle and license information and all the challans will notify the commuter through message or email. 
+3. A stolen vehicle report will be viewed by the police and the police can update the status of the stolen vehicle through the application which will notify the user. This approach is also useful to penalize the offenders, who violate the traffic rules.
+4. The police’s account can generates a digital receipt avoiding any kind of unwanted tampering with the process. 
+
+
+
+
+
 
