@@ -15,6 +15,9 @@ from payments import PurchasedItem
 from payments.models import BasePayment
 
 
+
+# Used to store uploaded documentations 
+# of user and vehicle into the local directory.
 @deconstructible
 class ContentFileName:
     def __init__(self, prefix):
